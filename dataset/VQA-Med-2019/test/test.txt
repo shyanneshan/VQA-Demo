@@ -1,0 +1,6 @@
+synpic54082|what modality is shown?|cta - ct angiography
+synpic48556|was the mri taken with contrast?|no
+synpic21435|in what plane is this ct scan?|axial
+synpic16333|what organ system is displayed in this ct scan?|skull and contents
+synpic49505|is this image normal?|yes
+synpic53988|what is the primary abnormality in this image?|meningioma
