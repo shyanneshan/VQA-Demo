@@ -54,11 +54,27 @@
           </template>
         </el-form-item>
         <el-form-item>
-          <el-upload
-              class="upload-demo"
-              drag
-              action="https://jsonplaceholder.typicode.com/posts/"
-              multiple>
+          <el-upload class="upload-demo"
+                     ref="upload"
+                     drag
+                     action="http://localhost:8089/upload"
+                     multiple
+                     :auto-upload="false"
+                     :limit="5"
+                     :on-success="handleFilUploadSuccess"
+                     :on-remove="handleRemove"
+          >
+<!-- -->
+<!--          <el-upload-->
+<!--              class="upload-demo"-->
+<!--              drag-->
+<!--              ref="upload"-->
+<!--              action="http://localhost:8089/upload"-->
+<!--              :auto-upload="false"-->
+<!--              :limit="5"-->
+<!--              :on-success="handleFilUploadSuccess"-->
+<!--              :on-remove="handleRemove"-->
+<!--              multiple>-->
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">drop files here,or <em>click here to upload files</em></div>
             <div class="el-upload__tip" slot="tip">please upload zip files</div>
@@ -256,11 +272,30 @@ export default {
       trainSetFileList: [],
       testSetFileList: [],
       devSetFileList: [],
+      fileBook: null
     };
   },
   methods: {
-
-
+    handleRemove(file,fileList) {
+      console.log(file,fileList);
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    // 文件上传成功时的函数
+    handleFilUploadSuccess (res,file,fileList) {
+      console.log(res,file,fileList)
+      this.$message.success("上传成功")
+    },
+    handleUpdate () {
+      this.dialogVisible = true;
+    },
+    // 处理文件上传的函数
+    handleUpload () {
+      // console.log(res,file)
+      this.submitUpload()
+      this.dialogVisible = false
+    },
 
     download(url){
       const ele = document.createElement('a');
@@ -301,13 +336,15 @@ export default {
       this.addDatasetFormVisible = true;
     },
     addDataset() {
+      this.handleUpload();
       let params = new FormData();
+
       params.append("name", this.addDatasetForm.name);
       params.append("description", this.addDatasetForm.description);
       params.append("train", this.addDatasetForm.ratio[0]);
       params.append("valid", this.addDatasetForm.ratio[1]-this.addDatasetForm.ratio[0]);
       params.append("test", 10-this.addDatasetForm.ratio[1]);
-
+      // params.append("file", this.fileBook)
       this.$axios({
         method: "post",
         // url: "/" + this.$store.state.user.id + "/dataset/upload",
@@ -358,7 +395,7 @@ export default {
     },
     submitUploadDevSetFile() {
       this.uploadDatasetForm.type = "dev";
-      this.$refs.uploadDevSet.submit();
+      DevSet.submit();
     },
     uploadDatasetFile(content) {
       let params = new FormData();
