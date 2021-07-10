@@ -1,25 +1,36 @@
 # Medical-named-entity-recognition
 该项目用双向长短时记忆神经网络和条件随机场(Bi-LSTM-CRF)的命名实体识别
 
-
-# Introduce
-data:已标注的医疗数据，O非实体部分,TREATMENT治疗方式, BODY身体部位, SIGN疾病症状, CHECK医学检查, DISEASE疾病实体.  
-data_origin:项目提供的医疗数据，需要转化为目标序列标记集合  
-transfer_data:目标序列化脚本  
-model：训练模型需要的字向量  
-<table>
-    <tr>
-        <th>训练集1</th>
-        <th>测试集</th>
-        <th>训练集准确率</th>
-        <th>测试集准确率</th>
-    </tr>
-    <tr align="center">
-        <td>6268</td>
-        <td>1571</td>
-        <td>0.965</td>
-        <td>0.845</td>
-    </tr>
-</table>    
- lstm_predict.py:对训练好的实体识别模型进行测试  
- 
+## Requirements
+absl-py==0.12.0
+astor==0.8.1
+cached-property==1.5.2
+cycler==0.10.0
+gast==0.4.0
+grpcio==1.37.1
+h5py==2.10.0
+importlib-metadata==4.0.1
+jieba==0.42.1
+Keras==2.2.4
+Keras-Applications==1.0.8
+keras-contrib @ git+https://www.github.com/keras-team/keras-contrib.git@3fc5ef709e061416f4bc8a92ca3750c824b5d2b0
+Keras-Preprocessing==1.1.2
+kiwisolver==1.3.1
+Markdown==3.3.4
+matplotlib==3.4.2
+mock==4.0.3
+numpy==1.20.3
+Pillow==8.2.0
+protobuf==3.17.0
+pyparsing==2.4.7
+python-dateutil==2.8.1
+PyYAML==5.4.1
+scipy==1.6.3
+six==1.16.0
+tensorboard==1.12.2
+tensorflow==1.13.0rc2
+tensorflow-estimator==1.13.0
+termcolor==1.1.0
+typing-extensions==3.10.0.0
+Werkzeug==2.0.0
+zipp==3.4.1
