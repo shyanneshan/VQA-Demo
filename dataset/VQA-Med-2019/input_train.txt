@@ -1,0 +1,3 @@
+{"question": "which organ is captured by this ct scan?", "title": "CT scan", "titleHasAns": 0, "sentences_pairs": [["computer aided tomography, computed tomography scan", 0]], "docHasAns": 0}
+{"question": "what kind of image is this?", "title": "KIND", "titleHasAns": 0, "sentences_pairs": [["kind may refer to:", 0]], "docHasAns": 0}
+{"question": "what is abnormal in the ct scan?", "title": "CT scan", "titleHasAns": 0, "sentences_pairs": [["computer aided tomography, computed tomography scan", 0]], "docHasAns": 0}

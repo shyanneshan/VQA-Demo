@@ -1,0 +1,62 @@
+[
+    {
+        "qid": 1,
+        "question": "Is/Are there calcification?",
+        "answer": "yes",
+        "image_name": "synpic27597"
+    },
+    {
+        "qid": 2,
+        "question": "Which lobe of the cerebrum is visible?",
+        "answer": "Temporal lobe",
+        "image_name": "synpic59935"
+    },
+    {
+        "qid": 3,
+        "question": "Is this a chest x-ray?",
+        "answer": "yes",
+        "image_name": "synpic49914"
+    },
+    {
+        "qid": 4,
+        "question": "Is/Are there fat stranding?",
+        "answer": "No",
+        "image_name": "synpic28718"
+    },
+    {
+        "qid": 5,
+        "question": "Is/Are there blurring of the grey-white matter in the patient's right temporal lobe?",
+        "answer": "Yes",
+        "image_name": "synpic39757"
+    },
+    {
+        "qid": 6,
+        "question": "What structure in the left basal ganglia is spared?",
+        "answer": "Left thalamus",
+        "image_name": "synpic52282"
+    },
+    {
+        "qid": 7,
+        "question": "What is the air under the patient's left hemidiaphragm?",
+        "answer": "Stomach bubble",
+        "image_name": "synpic33302"
+    },
+    {
+        "qid": 8,
+        "question": "What is the location of the mass?",
+        "answer": "right kidney",
+        "image_name": "synpic31757"
+    },
+    {
+        "qid": 9,
+        "question": "Is/Are there pulmonary consolidations?",
+        "answer": "No",
+        "image_name": "synpic33302"
+    },
+    {
+        "qid": 10,
+        "question": "Are the kidneys hyper attenuated?",
+        "answer": "Yes",
+        "image_name": "synpic22286"
+    }
+]

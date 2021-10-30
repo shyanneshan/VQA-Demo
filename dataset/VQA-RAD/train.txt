@@ -1,0 +1,10 @@
+synpic27597|Is/Are there calcification?|yes
+synpic59935|Which lobe of the cerebrum is visible?|Temporal lobe
+synpic49914|Is this a chest x-ray?|yes
+synpic28718|Is/Are there fat stranding?|No
+synpic39757|Is/Are there blurring of the grey-white matter in the patient's right temporal lobe?|Yes
+synpic52282|What structure in the left basal ganglia is spared?|Left thalamus
+synpic33302|What is the air under the patient's left hemidiaphragm?|Stomach bubble
+synpic31757|What is the location of the mass?|right kidney
+synpic33302|Is/Are there pulmonary consolidations?|No
+synpic22286|Are the kidneys hyper attenuated?|Yes

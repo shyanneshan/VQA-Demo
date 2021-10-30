@@ -1,0 +1,38 @@
+[
+    {
+        "qid": 1,
+        "question": "what kind of image is this?",
+        "answer": "cta - ct angiography",
+        "image_name": "synpic41148"
+    },
+    {
+        "qid": 2,
+        "question": "is this a t1 weighted image?",
+        "answer": "no",
+        "image_name": "synpic43984"
+    },
+    {
+        "qid": 3,
+        "question": "which plane is this image taken?",
+        "answer": "axial",
+        "image_name": "synpic41148"
+    },
+    {
+        "qid": 4,
+        "question": "which organ is captured by this ct scan?",
+        "answer": "lung, mediastinum, pleura",
+        "image_name": "synpic41148"
+    },
+    {
+        "qid": 5,
+        "question": "what is abnormal in the ct scan?",
+        "answer": "cryptococcal pneumonia in an immunocompetent host",
+        "image_name": "synpic41148"
+    },
+    {
+        "qid": 6,
+        "question": "is this image normal?",
+        "answer": "yes",
+        "image_name": "synpic35685"
+    }
+]

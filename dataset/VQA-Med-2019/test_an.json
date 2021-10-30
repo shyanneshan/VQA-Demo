@@ -1,0 +1,74 @@
+[
+    {
+        "question_id": 1,
+        "image_name": "synpic54082.jpg",
+        "question": "what modality is shown?",
+        "answers_occurence": [
+            [
+                "cta - ct angiography",
+                10
+            ]
+        ],
+        "answer": "cta - ct angiography"
+    },
+    {
+        "question_id": 2,
+        "image_name": "synpic48556.jpg",
+        "question": "was the mri taken with contrast?",
+        "answers_occurence": [
+            [
+                "no",
+                10
+            ]
+        ],
+        "answer": "no"
+    },
+    {
+        "question_id": 3,
+        "image_name": "synpic21435.jpg",
+        "question": "in what plane is this ct scan?",
+        "answers_occurence": [
+            [
+                "axial",
+                10
+            ]
+        ],
+        "answer": "axial"
+    },
+    {
+        "question_id": 4,
+        "image_name": "synpic16333.jpg",
+        "question": "what organ system is displayed in this ct scan?",
+        "answers_occurence": [
+            [
+                "skull and contents",
+                10
+            ]
+        ],
+        "answer": "skull and contents"
+    },
+    {
+        "question_id": 5,
+        "image_name": "synpic49505.jpg",
+        "question": "is this image normal?",
+        "answers_occurence": [
+            [
+                "yes",
+                10
+            ]
+        ],
+        "answer": "yes"
+    },
+    {
+        "question_id": 6,
+        "image_name": "synpic53988.jpg",
+        "question": "what is the primary abnormality in this image?",
+        "answers_occurence": [
+            [
+                "meningioma",
+                10
+            ]
+        ],
+        "answer": "meningioma"
+    }
+]

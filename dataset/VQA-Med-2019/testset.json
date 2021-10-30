@@ -1,0 +1,38 @@
+[
+    {
+        "qid": 1,
+        "question": "what modality is shown?",
+        "answer": "cta - ct angiography",
+        "image_name": "synpic54082"
+    },
+    {
+        "qid": 2,
+        "question": "was the mri taken with contrast?",
+        "answer": "no",
+        "image_name": "synpic48556"
+    },
+    {
+        "qid": 3,
+        "question": "in what plane is this ct scan?",
+        "answer": "axial",
+        "image_name": "synpic21435"
+    },
+    {
+        "qid": 4,
+        "question": "what organ system is displayed in this ct scan?",
+        "answer": "skull and contents",
+        "image_name": "synpic16333"
+    },
+    {
+        "qid": 5,
+        "question": "is this image normal?",
+        "answer": "yes",
+        "image_name": "synpic49505"
+    },
+    {
+        "qid": 6,
+        "question": "what is the primary abnormality in this image?",
+        "answer": "meningioma",
+        "image_name": "synpic53988"
+    }
+]

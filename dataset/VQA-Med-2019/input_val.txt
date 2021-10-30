@@ -1,0 +1,2 @@
+{"question": "what organ system is shown in the image?", "title": "Organ system", "titleHasAns": 0, "sentences_pairs": [["an organ system is a group of organs that work together to perform one or more functions.", 0], ["each organ has a specialized role in a plant or animal body, and is made up of distinct tissues.", 0]], "docHasAns": 0}
+{"question": "is there an abnormality in the x-ray?", "title": "X", "titleHasAns": 0, "sentences_pairs": [["][][][][][][][][][][][][]as in the english word [u+0078", 0]], "docHasAns": 0}

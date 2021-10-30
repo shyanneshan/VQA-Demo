@@ -1,0 +1,3 @@
+synpic40520|Is/Are the heart normal size?|No
+synpic28180|What symptoms would this patient present with?|RUQ pain, jaundice,weight loss?
+synpic39532|Where is/are the lesion located?|Right lower lobe

@@ -1,0 +1,3 @@
+{"question": "what organ system is displayed in this ct scan?", "title": "Organ system", "titleHasAns": 0, "sentences_pairs": [["an organ system is a group of organs that work together to perform one or more functions.", 0], ["each organ has a specialized role in a plant or animal body, and is made up of distinct tissues.", 0]], "docHasAns": 0}
+{"question": "what modality is shown?", "title": "Shown", "titleHasAns": 0, "sentences_pairs": [["shown is an american surname that reflects an anglicization of the german surname schaun.", 0], ["a common variant is shawn.", 0]], "docHasAns": 0}
+{"question": "in what plane is this ct scan?", "title": "CT scan", "titleHasAns": 0, "sentences_pairs": [["computer aided tomography, computed tomography scan", 0]], "docHasAns": 0}

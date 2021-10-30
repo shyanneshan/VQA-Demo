@@ -1,0 +1,74 @@
+[
+    {
+        "question_id": 1,
+        "image_name": "synpic41148.jpg",
+        "question": "what kind of image is this?",
+        "answers_occurence": [
+            [
+                "cta - ct angiography",
+                10
+            ]
+        ],
+        "answer": "cta - ct angiography"
+    },
+    {
+        "question_id": 2,
+        "image_name": "synpic43984.jpg",
+        "question": "is this a t1 weighted image?",
+        "answers_occurence": [
+            [
+                "no",
+                10
+            ]
+        ],
+        "answer": "no"
+    },
+    {
+        "question_id": 3,
+        "image_name": "synpic41148.jpg",
+        "question": "which plane is this image taken?",
+        "answers_occurence": [
+            [
+                "axial",
+                10
+            ]
+        ],
+        "answer": "axial"
+    },
+    {
+        "question_id": 4,
+        "image_name": "synpic41148.jpg",
+        "question": "which organ is captured by this ct scan?",
+        "answers_occurence": [
+            [
+                "lung, mediastinum, pleura",
+                10
+            ]
+        ],
+        "answer": "lung, mediastinum, pleura"
+    },
+    {
+        "question_id": 5,
+        "image_name": "synpic41148.jpg",
+        "question": "what is abnormal in the ct scan?",
+        "answers_occurence": [
+            [
+                "cryptococcal pneumonia in an immunocompetent host",
+                10
+            ]
+        ],
+        "answer": "cryptococcal pneumonia in an immunocompetent host"
+    },
+    {
+        "question_id": 6,
+        "image_name": "synpic35685.jpg",
+        "question": "is this image normal?",
+        "answers_occurence": [
+            [
+                "yes",
+                10
+            ]
+        ],
+        "answer": "yes"
+    }
+]

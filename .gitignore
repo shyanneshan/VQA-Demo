@@ -43,3 +43,5 @@ Thumbs.db
 /.mvn/
 /mvnw.cmd
 /mvnw
+/demo/src/main/resources/datasetGene/venv/
+/model_code/nlm/.vector_cache/

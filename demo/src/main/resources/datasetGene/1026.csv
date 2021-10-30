@@ -1,0 +1,10 @@
+﻿id,patient_id,photo_id,dia_list,description,bone_name,direction,type,position,dataset
+,3,4,"left scapula fracture,fracture,Left scapula fracture","deformity, mobility disorder, left s",4,2,1,2,1026
+,2,1,"comminuted fracture,Fracture,Scalp laceration
+     8","multiple bleeding all over the body, and left lower limb dysfunction for 8 hours.",4,1,1,3,1026
+,2,2,"Fracture,comminuted fracture,Thoracic spine fractures
+     7",pen comminuted fracture of right hand,3,3,2,1,1026
+,1,3,"injury to the left upper arm,radial nerve injury,cerebral infarction","The left upper arm was painful,",3,2,1,3,1026
+,3,4,,dsf,2,2,2,2,1026
+,3,4,,d,1,3,1,4,1026
+,3,4,,fd,1,2,1,4,1026

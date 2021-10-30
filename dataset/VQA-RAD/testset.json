@@ -1,0 +1,20 @@
+[
+    {
+        "qid": 1,
+        "question": "Is there evidence of an aortic aneurysm?",
+        "answer": "yes",
+        "image_name": "synpic42202"
+    },
+    {
+        "qid": 2,
+        "question": "Is this an axial plane?",
+        "answer": "yes",
+        "image_name": "synpic54610"
+    },
+    {
+        "qid": 3,
+        "question": "How is the patient oriented?",
+        "answer": "Posterior-Anterior",
+        "image_name": "synpic29265"
+    }
+]

@@ -1,0 +1,20 @@
+[
+    {
+        "qid": 1,
+        "question": "Is/Are the heart normal size?",
+        "answer": "No",
+        "image_name": "synpic40520"
+    },
+    {
+        "qid": 2,
+        "question": "What symptoms would this patient present with?",
+        "answer": "RUQ pain, jaundice,weight loss?",
+        "image_name": "synpic28180"
+    },
+    {
+        "qid": 3,
+        "question": "Where is/are the lesion located?",
+        "answer": "Right lower lobe",
+        "image_name": "synpic39532"
+    }
+]

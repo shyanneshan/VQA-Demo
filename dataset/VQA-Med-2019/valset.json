@@ -1,0 +1,38 @@
+[
+    {
+        "qid": 1,
+        "question": "what imaging modality was used to take this image?",
+        "answer": "ct with iv contrast",
+        "image_name": "synpic54733"
+    },
+    {
+        "qid": 2,
+        "question": "was the mri taken with contrast?",
+        "answer": "no",
+        "image_name": "synpic35681"
+    },
+    {
+        "qid": 3,
+        "question": "in what plane is this image oriented?",
+        "answer": "axial",
+        "image_name": "synpic54733"
+    },
+    {
+        "qid": 4,
+        "question": "what organ system is shown in the image?",
+        "answer": "face, sinuses, and neck",
+        "image_name": "synpic54733"
+    },
+    {
+        "qid": 5,
+        "question": "what is the primary abnormality in this image?",
+        "answer": "paraganglioma",
+        "image_name": "synpic54733"
+    },
+    {
+        "qid": 6,
+        "question": "is there an abnormality in the x-ray?",
+        "answer": "yes",
+        "image_name": "synpic43431"
+    }
+]
