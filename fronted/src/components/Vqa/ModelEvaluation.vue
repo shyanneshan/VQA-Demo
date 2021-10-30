@@ -9,121 +9,160 @@
         </el-header>
         <div>
           <el-card class="box-card">
-            <el-collapse v-model="activeNames" @change="handleChange">
-              <div v-for="(item,index) in models">
-                <el-collapse-item :title="item.name" :name="index">
-                  <el-header>-->
-                                      <!-- <div>Model Description</div> -->
-                                      <el-link
-                                        :href="item.link"
-                                        type="primary"
-                                        class="ms"
-                                        >{{item.paper}}</el-link
-                                      >
-                                      <div>
-                                      </div>
-                                    </el-header>
-                                    <div>
-                                      <el-footer>
-<!--                                        <div>-->
-<!--                                          <span>&ndash;&gt;{{item.type}}</span>-->
-<!--                                        </div>-->
-                                        <div>
-                                          <!-- <el-main> -->
-                                          <span>Dataset</span>
-                                          <div>
-                                            <template>
-                                              <el-select v-model="characterChosen" placeholder="Please"
-                                                         @change="chooseDataset">
-                                                <el-option
-                                                    v-for="item in options"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                                </el-option>
-                                              </el-select>
-                                            </template>
-                                          </div>
-                                          <span>Epoch</span>
-                                          <div>
-                                            <template>
-                                              <div class="block">
-                                                <el-slider
-                                                    v-model="epoch"
-                                                    :step="10"
-                                                    show-stops
-                                                    show-input>
-                                                </el-slider>
-                                              </div>
-                                            </template>
-                                          </div>
-                                          <span>Batchsize</span>
-                                          <div>
-                                            <template>
-                                              <el-select v-model="choosenBatchsize" placeholder="Please"
-                                                         @change="chooseBatchsize"
-                                                          >
-                                                <el-option
-                                                    v-for="item in batchsize"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                                </el-option>
-                                              </el-select>
-                                            </template>
-                                          </div>
+            <el-collapse>
+              <div v-for="(modeltype,typeindex) in modelType">
+                <el-collapse-item :title="modeltype.name" :name="typeindex">
+                  <el-collapse v-model="activeNames" @change="handleChange">
+                    <div v-for="(item,index) in modeltype.model">
+                      <el-collapse-item :title="item.name" :name="index">
+                        <el-header>-->
+                          <!-- <div>Model Description</div> -->
+                          <el-link
+                              :href="item.link"
+                              type="primary"
+                              class="ms"
+                          >{{item.paper}}</el-link
+                          >
+                          <div>
+                          </div>
+                        </el-header>
+                        <div>
+                          <el-footer>
+                            <!--                                        <div>-->
+                            <!--                                          <span>&ndash;&gt;{{item.type}}</span>-->
+                            <!--                                        </div>-->
+                            <div>
+                              <!-- <el-main> -->
+                              <span>Dataset</span>
+                              <div>
+                                <template>
+                                  <el-select v-model="characterChosen" placeholder="Please"
+                                             @change="chooseDataset">
+                                    <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                                </template>
+                              </div>
+                              <span>Epoch</span>
+                              <div>
+                                <template>
+                                  <div class="block">
+                                    <el-slider
+                                        v-model="epoch"
+                                        :step="10"
+                                        show-stops
+                                        show-input>
+                                    </el-slider>
+                                  </div>
+                                </template>
+                              </div>
+                              <span>Batchsize</span>
+                              <div>
+                                <template>
+                                  <el-select v-model="choosenBatchsize" placeholder="Please"
+                                             @change="chooseBatchsize"
+                                  >
+                                    <el-option
+                                        v-for="item in batchsize"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                                </template>
+                              </div>
 
-                                          <span  v-if="item.rnn_cell_vis">Rnn Cell</span>
-                                          <div>
-                                            <template>
-                                              <el-select v-model="choosenRnncell" placeholder="Please"
-                                                         @change="chooseRnncell"
-                                                         v-if="item.rnn_cell_vis">
-                                                <el-option
-                                                    v-for="item in rnn"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                                </el-option>
-                                              </el-select>
-                                            </template>
-                                          </div>
-                                          <span v-if="item.embedding_vis">Embedding</span>
-                                          <div>
-                                            <template>
-                                              <el-select v-model="choosenEmbedding" placeholder="Please"
-                                                         @change="chooseEmbedding"
-                                                         v-if="item.embedding_vis">
-                                                <el-option
-                                                    v-for="item in embedding"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                                </el-option>
-                                              </el-select>
-                                            </template>
-                                          </div>
-                                          <span>TrainName</span>
-                                          <div>
-                                            <el-col :span="12">
-                                              <el-input placeholder="Please input model name"
-                                                        v-model="input" size="medium">
-                                              </el-input>
-                                            </el-col>
+                              <span  v-if="item.rnn_cell_vis">Rnn Cell</span>
+                              <div>
+                                <template>
+                                  <el-select v-model="choosenRnncell" placeholder="Please"
+                                             @change="chooseRnncell"
+                                             v-if="item.rnn_cell_vis">
+                                    <el-option
+                                        v-for="item in rnn"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                                </template>
+                              </div>
+                              <span v-if="item.embedding_vis">Embedding</span>
+                              <div>
+                                <template>
+                                  <el-select v-model="choosenEmbedding" placeholder="Please"
+                                             @change="chooseEmbedding"
+                                             v-if="item.embedding_vis">
+                                    <el-option
+                                        v-for="item in embedding"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                                </template>
+                              </div>
+                              <span v-if="item.attention_vis">Attention</span>
+                              <div>
+                                <template>
+                                  <el-select v-model="choosenAttention" placeholder="Please"
+                                             @change="chooseAttention"
+                                             v-if="item.attention_vis">
+                                    <el-option
+                                        v-for="item in attention"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                                </template>
+                              </div>
+                              <span v-if="item.construct_vis">Construct Module</span>
+                              <div>
+                                <template>
+                                  <el-select v-model="choosenConstruct" placeholder="Please"
+                                             @change="chooseConstruct"
+                                             v-if="item.construct_vis">
+                                    <el-option
+                                        v-for="item in construct"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                                </template>
+                              </div>
 
-                                          </div>
-                                          <div class="operation-btn-bar">
-                                            <el-button type="primary" @click="trainModel(item)"
-                                              >Train</el-button
-                                            >
-                                          </div>
-                                          <div></div>
-                                          <!-- </el-main> -->
-                                        </div>
-                                      </el-footer>
-                                    </div>
+                              <span>TrainName</span>
+                              <div>
+                                <el-col :span="12">
+                                  <el-input placeholder="Please input model name"
+                                            v-model="input" size="medium">
+                                  </el-input>
+                                </el-col>
+
+                              </div>
+                              <div class="operation-btn-bar">
+                                <el-button type="primary" @click="trainModel(item)"
+                                >Train</el-button
+                                >
+                              </div>
+                              <div></div>
+                              <!-- </el-main> -->
+                            </div>
+                          </el-footer>
+                        </div>
+                      </el-collapse-item>
+                    </div>
+                  </el-collapse>
                 </el-collapse-item>
+
               </div>
+
             </el-collapse>
           </el-card>
         </div>
@@ -145,7 +184,7 @@ export default {
       // ],
       this.$axios({
         method: 'get',
-        url: '/dataSetsNames',
+        url: '/dataSetsNamesLabeled',
       }).then(res => {
         console.log("all datasets: ")
         console.log(res.data)
@@ -156,6 +195,7 @@ export default {
           // console.log(temp)
           this.options.push(temp)
         }
+        console.log(this.options)
         // this.characterChosen=this.characterList[0].label;
 
       }).catch(error => {
@@ -165,6 +205,12 @@ export default {
     },
     chooseEmbedding(value){
       this.choosenEmbedding=value;
+    },
+    chooseAttention(value){
+      this.choosenAttention=value;
+    },
+    chooseConstruct(value){
+      this.choosenConstruct=value;
     },
     chooseRnncell(value){
       this.choosenRnncell=value;
@@ -186,11 +232,13 @@ export default {
     },
     trainModel(item){
       console.log(item)
-      alert("Success!Begin training "+item.name+" model.");
+      alert("Begin training "+item.name+" model.");
       var dataset='';
       var batchsize="";
       var rnn="";
       var embedding="";
+      var attention="";
+      var construct="";
       //getDataset
       for(var i=0;i<this.options.length;i++){
         if(this.characterChosen==this.options[i].value){
@@ -223,7 +271,25 @@ export default {
           break;
         }
       }
+      //attention
+      for(var i=0;i<this.attention.length;i++){
+        if(this.choosenAttention==this.attention[i].value){
+          // console.log(this.options[i])
+          attention=this.attention[i].label;
+          break;
+        }
+      }
+      //constructor
+      for(var i=0;i<this.construct.length;i++){
+        if(this.choosenConstruct==this.construct[i].value){
+          // console.log(this.options[i])
+          construct=this.construct[i].label;
+          break;
+        }
+      }
       console.log(dataset)
+      console.log(attention)
+      console.log(construct)
       this.$axios({
         method: 'post',
         url: '/train/'+item.name,
@@ -233,15 +299,25 @@ export default {
           batchsize:batchsize,
           epoch:this.epoch,
           rnn_cell:rnn,
-          embedding:embedding
+          embedding:embedding,
+          attention:attention,
+          constructor:construct
         }
       }
       ).then(res => {
+        if (res.data=="name_existed"){
+          alert("ERROR! This name has existed! ");
+          console.log("name_existed checking.");
+          console.log(res.data);
+        }
+        // else {
+        //   alert("Success!Begin training "+item.name+" model.");
+        // }
         console.log(this.characterList)
         console.log(res.data);
       }).catch(error => {
         console.log(error);
-        alert("ERROR! Check Console plz! ");
+        alert("TRAIN ERROR! Check Console plz! ");
         this.$axios({
               method: 'post',
               url: '/error/'+item.name,
@@ -261,11 +337,13 @@ export default {
   data() {
 
     return {
-      choosenBatchsize:"",
-      characterChosen:"",
-      epoch:"",
-      choosenRnncell:'',
-      choosenEmbedding:'',
+      choosenBatchsize:32,
+      characterChosen:1,
+      epoch:20,
+      choosenRnncell:1,
+      choosenEmbedding:3,
+      choosenAttention:1,
+      choosenConstruct:3,
       input:'',
       options: [
         // { value: 1, label: "VQA-Med-2019" },
@@ -273,14 +351,24 @@ export default {
         // { value: 3, label: "MVQA(Our)" },
       ],
       rnn:[
-        { value: 1, label: "RNN" },
-        { value: 2, label: "GRU" },
-        { value: 3, label: "LSTM" },
+        // { value: 1, label: "RNN" },
+        { value: 1, label: "GRU" },
+        { value: 2, label: "LSTM" },
       ],
       embedding:[
         { value: 1, label: "w2v" },
         { value: 2, label: "glove" },
         { value: 3, label: "none" },
+      ],
+      attention:[
+        { value: 1, label: "SAN" },
+        { value: 2, label: "BAN" }
+      ],
+      construct:[
+        { value: 1, label: "maml" },
+        { value: 2, label: "autoencoder" },
+        { value: 3, label: "both" },
+        // { value: 4, label: "none" },
       ],
       batchsize:[
         { value: 1, label: "1" },
@@ -291,58 +379,66 @@ export default {
         { value: 6, label: "64" },
         { value: 7, label: "128" },
       ],
-      models:[
-        {name:'NLM',
-          paper:'NLM at VQA-Med 2020: Visual Question Answering and Generation in the Medical Domain',
-          link:'http://ceur-ws.org/Vol-2696/paper_98.pdf',
-          type:"Seq2Seq",
-          embedding_vis:true,
-          rnn_cell_vis:true
-},
-//         {name:'CR',
-//           paper:'Medical Visual Question Answering via Conditional Reasoning',
-//           link:'http://www4.comp.polyu.edu.hk/~csxmwu/papers/MM-2020-Med-VQA.pdf',
-//           type:"attention",
-//           embedding_vis:false,
-//           rnn_cell_vis:false
-// },
-        {name:'VGG-Seq2Seq',
-          paper:'JUST at VQA-Med: A VGG-Seq2Seq Model',
-          link:'http://ceur-ws.org/Vol-2125/paper_171.pdf',
-          type:"Seq2Seq",
-          embedding_vis:false,
-          rnn_cell_vis:false
+      modelType:[
 
-},
-        {name:'ODL',
-          paper:'Overcoming Data Limitation in Medical Visual Question Answering. ',
-          type:"joint embedding",
-          link:'https://arxiv.org/abs/1909.11867',
-          embedding_vis:false,
-          rnn_cell_vis:false
-},
-//         {name:'CGMVQA',
-//           paper:'CGMVQA: A New Classification and Generative Model for Medical Visual Question Answering',
-//           link:'https://ieeexplore.ieee.org/abstract/document/9032109',
-//           type:"attention",
-//           embedding_vis:false,
-//           rnn_cell_vis:false
-// },
-        {name:'MMBERT',
-          paper:'MMBERT: Multimodal BERT Pretraining for Improved Medical VQA',
-          link:'https://arxiv.org/abs/2104.01394',
-          type:"attention",
-          embedding_vis:false,
-          rnn_cell_vis:false
-},
-        {name:'Knowledge Embedded Metalearning',
-          paper:'Learning from the Guidance: Knowledge Embedded Meta-learning for Medical Visual Question Answering',
-          link:'https://link.springer.com/chapter/10.1007/978-3-030-63820-7_22',
-          type:"knowledge embedding",
-          embedding_vis:false,
-          rnn_cell_vis:false
-},
-      ]
+        {name:'Joint Embedding  Models',
+          model:[
+            {name:'--->  ODL',
+              paper:'Overcoming Data Limitation in Medical Visual Question Answering. ',
+              type:"joint embedding",
+              link:'https://arxiv.org/abs/1909.11867',
+              embedding_vis:false,
+              rnn_cell_vis:true,
+              attention_vis:true,
+              construct_vis:true
+            },
+          ]},
+        {name:'Encoder-Decoder Models',
+          model:[
+            {name:'--->  NLM',
+              paper:'NLM at VQA-Med 2020: Visual Question Answering and Generation in the Medical Domain',
+              link:'http://ceur-ws.org/Vol-2696/paper_98.pdf',
+              type:"Seq2Seq",
+              embedding_vis:true,
+              rnn_cell_vis:true,
+              attention_vis:false,
+              construct_vis:false
+            },
+            {name:'--->  VGG-Seq2Seq',
+              paper:'JUST at VQA-Med: A VGG-Seq2Seq Model',
+              link:'http://ceur-ws.org/Vol-2125/paper_171.pdf',
+              type:"Seq2Seq",
+              embedding_vis:false,
+              rnn_cell_vis:false,
+              attention_vis:false,
+              construct_vis:false
+            },
+          ]},
+        {name:'Attention-based  Models',
+          model:[
+            {name:'--->  MMBERT',
+              paper:'MMBERT: Multimodal BERT Pretraining for Improved Medical VQA',
+              link:'https://arxiv.org/abs/2104.01394',
+              type:"attention",
+              embedding_vis:false,
+              rnn_cell_vis:false,
+              attention_vis:false,
+              construct_vis:false
+            },
+          ]},
+        {name:'Knowledge Embedding  Models',
+          model:[
+            {name:'--->  ArticleNet',
+              paper:'OK-VQA: A Visual Question Answering Benchmark Requiring External Knowledge',
+              link:'https://openaccess.thecvf.com/content_CVPR_2019/papers/Marino_OK-VQA_A_Visual_Question_Answering_Benchmark_Requiring_External_Knowledge_CVPR_2019_paper.pdf',
+              type:"knowledge embedding",
+              embedding_vis:false,
+              rnn_cell_vis:false,
+              attention_vis:false,
+              construct_vis:false
+            },
+          ]},
+      ],
     };
   },
 };

@@ -5,6 +5,7 @@ import com.mvqa.demo.entity.PythonCallEntity;
 import com.mvqa.demo.model.po.ReportPo;
 import com.mvqa.demo.model.vo.ReportFullVo;
 import com.mvqa.demo.model.vo.ReportVo;
+import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
 import io.swagger.annotations.Api;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +21,21 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @Api(value = "send data to train and get result")
 @RestController
 @RequestMapping(value="", produces = "application/json;charset=UTF-8")
 public class trainModelController {
+    private final String weightdir = "/data2/entity/bhy/VQADEMO/weights/";
     @Autowired
     TrainModelService trainModelService;
 
-    PythonCallEntity pythonCallEntity=new PythonCallEntity();
+    @Autowired
+    private PythonCallEntity pythonCallEntity;//=new PythonCallEntity();
 
     String downloadpath="/home/wxl/Documents/VQADEMO/download";
 
@@ -53,6 +59,12 @@ public class trainModelController {
         trainModelService.setTrainError(name);
     }
 
+    @RequestMapping(value = "deleteFailed", method = RequestMethod.DELETE)
+    public void deleteFailed(HttpServletRequest request) throws IOException, ParseException
+    {
+        trainModelService.deleteFailed();
+    }
+
     //    @PostMapping("/train/{model}")
     @RequestMapping(value = "/train/{model}", method = RequestMethod.POST)
     public String insertReport(HttpServletRequest request,@RequestBody ReportVo reportVo,
@@ -61,8 +73,21 @@ public class trainModelController {
         //first,name data date state=running ----------insert to db
         //second,train ------------listening for the end of training
         //third,return savepath,Precision,Recall,f1-score
+//        model=model.split(" ")[-1];
+        List<String> arr4 = Arrays.asList(model.split("\\s+"));
+        Collections.reverse(arr4);
+        System.out.println(arr4);
+        model= arr4.get(0);
+        // firstly check new name whether exist
+        ArrayList<String> names=trainModelService.getAllModelNames_exist();
+        if (names.contains(reportVo.getName())){
+            // has this name
+            System.out.println("name_existed");
+            return "name_existed";
+        }
         ReportPo reportPo=trainModelService.insertReport(reportVo.getName(),reportVo.getData(),model,
-                reportVo.getEpoch(),reportVo.getBatchsize(),reportVo.getRnn_cell(),reportVo.getEmbedding());
+                reportVo.getEpoch(),reportVo.getBatchsize(),reportVo.getRnn_cell(),reportVo.getEmbedding(),
+                reportVo.getAttention(),reportVo.getConstructor());
         //switch choose model
         String cmd="";
         String savePath=(new File("")).getCanonicalPath()+"/weights";
@@ -71,10 +96,12 @@ public class trainModelController {
                 System.out.println("will train seq2seq.");
                 //call vgg seq2seq
                 try{
-                    String res=pythonCallEntity.VGG_Seq2Seq_train("train",reportPo.getData(),reportPo.getName(),
-                            String.valueOf(reportPo.getEpoch()),String.valueOf(reportPo.getBatchsize()),savePath);
+                    String res=pythonCallEntity.VGG_Seq2Seq_train(reportPo.getName(),reportPo.getData(),
+                            String.valueOf(reportPo.getEpoch()), String.valueOf(reportPo.getBatchsize()));
+//                    String res=pythonCallEntity.VGG_Seq2Seq_train("train",reportPo.getData(),reportPo.getName(),
+//                            String.valueOf(reportPo.getEpoch()),String.valueOf(reportPo.getBatchsize()),savePath);
                     System.out.println(res);
-                    ReportPo reportPo1_vgg=trainModelService.updateReportBleuByName(reportPo.getName(),Float.parseFloat(res));
+                    ReportPo reportPo1_vgg=trainModelService.updateReportBleuByName(reportPo.getName(),Float.parseFloat(res),weightdir+reportPo.getName());
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -98,31 +125,72 @@ public class trainModelController {
                 }
                 try{
 //                    String savePath=(new File("")).getCanonicalPath()+"/weights";
-                    String res=pythonCallEntity.NLM_train("train",reportPo.getData(),reportPo.getName(),String.valueOf(reportPo.getEpoch()),
-                            String.valueOf(reportPo.getBatchsize()),glove,w2v,reportPo.getRnnCell(),savePath);
+                    String res=pythonCallEntity.NLM_train(reportPo.getData(),reportPo.getName(),String.valueOf(reportPo.getEpoch()),
+                            String.valueOf(reportPo.getBatchsize()),glove,w2v,reportPo.getRnnCell());
                     System.out.println(res);
-                    ReportPo reportPo1_nlm=trainModelService.updateReportBleuByName(reportPo.getName(),Float.parseFloat("0"));
+                    ReportPo reportPo1_nlm=trainModelService.updateReportBleuByName(reportPo.getName(),Float.parseFloat(res),weightdir+reportPo.getName());
                 }catch (Exception e){
                     e.printStackTrace();
                     trainModelService.setTrainError(reportPo.getName());
                 }
                 break;
-            case "CR":
-                System.out.println("will train cr.");
-                //call CR
+            case "ArticleNet":
+                System.out.println("will train ArticleNet.");
+                try{
+                    String res=pythonCallEntity.AN_train(reportPo.getName(), reportPo.getData(), String.valueOf(reportPo.getEpoch()), String.valueOf(reportPo.getBatchsize()));
+                    String[] nums=res.split(" ");
+                    System.out.println(nums.length);
+                    ReportPo reportPo_an=trainModelService.updateReportByName(reportPo.getName(),Integer.parseInt(nums[0]),Integer.parseInt(nums[1]),Integer.parseInt(nums[2]),weightdir+reportPo.getName());
+                }catch (Exception e){
+                    e.printStackTrace();
+                    trainModelService.setTrainError(reportPo.getName());
+                }
                 break;
             case "ODL":
                 System.out.println("will train odl.");
+                System.out.println(reportPo.getConstructor());
+                try{
+//                    String res=pythonCallEntity.MMBERT("train",reportPo.getData(),reportPo.getName(),
+//                            String.valueOf(reportPo.getEpoch()),String.valueOf(reportPo.getBatchsize()));
+                    Boolean ae=true;
+                    Boolean maml=true;
+                    if (reportPo.getConstructor().equals("maml")){
+                        maml=true;
+                        ae=false;
+                    }else if(reportPo.getConstructor().equals("autoencoder")){
+                        maml= false;
+                        ae=true;
+                    }else if(reportPo.getConstructor().equals("both")){
+                        maml=true;
+                        ae=true;
+                    }else {
+                        maml=false;
+                        ae=false;
+                    }
+                    System.out.println(maml);
+                    System.out.println(ae);
+
+                    String res=pythonCallEntity.ODL_train(reportPo.getData(), reportPo.getName(), String.valueOf(reportPo.getEpoch()), String.valueOf(reportPo.getBatchsize()),
+                            reportPo.getAttention(), reportPo.getRnnCell(), ae, maml);
+                    String[] nums=res.split(" ");
+                    System.out.println(nums.length);
+                    ReportPo reportPo_odl=trainModelService.updateReportByName(reportPo.getName(),Integer.parseInt(nums[0]),Integer.parseInt(nums[1]),Integer.parseInt(nums[2]),weightdir+reportPo.getName());
+                }catch (Exception e){
+                    e.printStackTrace();
+                    trainModelService.setTrainError(reportPo.getName());
+                }
                 //call ODL
                 break;
             case "MMBERT":
                 System.out.println("will train mmbert.");
                 //call mmbert python
                 try{
-                    String res=pythonCallEntity.MMBERT("train",reportPo.getData(),reportPo.getName(),
+                    String res=pythonCallEntity.MMBERT_train(reportPo.getData(),reportPo.getName(),
                             String.valueOf(reportPo.getEpoch()),String.valueOf(reportPo.getBatchsize()));
-                    System.out.println(res);
-//                    ReportPo reportPo1_nlm=trainModelService.updateReportByName(reportPo.getName(),Float.parseFloat("0"));
+
+                    String[] nums=res.split(" ");
+                    System.out.println(nums.length);
+                    ReportPo reportPo_mmbert=trainModelService.updateReportByName(reportPo.getName(),Integer.parseInt(nums[0]),Integer.parseInt(nums[1]),Integer.parseInt(nums[2]),weightdir+reportPo.getName());
                 }catch (Exception e){
                     e.printStackTrace();
                     trainModelService.setTrainError(reportPo.getName());

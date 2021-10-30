@@ -146,6 +146,7 @@ public class Photo {
         ctInfoPo ctInfoPo=new ctInfoPo();
         ctInfoPo.setDataset(this.getDataset());
         ctInfoPo.setPhotoId(this.getPhotoId());
+        ctInfoPo.setStatus(this.getFlag());
 //        ctInfoPo.setId(Integer.parseInt(String.valueOf(this.getId())));
         ctInfoPo.setDiaList(this.getDiaList());
         ctInfoPo.setPatientId(this.getPatientId());

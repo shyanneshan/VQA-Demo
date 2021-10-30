@@ -26,6 +26,9 @@ public class TrainModelService {
         return trainModelDao.getReportPo(modelName);
     }
 
+    public void deleteFailed(){
+        trainModelDao.deleteFailed();
+    }
     /**
      * @author ：hybai
      * @date ：Created in
@@ -35,8 +38,26 @@ public class TrainModelService {
         ArrayList<ReportPo> reportPos = trainModelDao.getAllModels();
         ArrayList<String> allModels=new ArrayList<String>();
         for (int idx = 0; idx < reportPos.size(); idx++) {
+            if (reportPos.get(idx).getClassification()=="ArticleNet")
+                continue;
             allModels.add(reportPos.get(idx).getName());
-            System.out.println(reportPos.get(idx));
+            System.out.println(reportPos.get(idx).getName());
+//            if(reportPos.get(idx).getState()=="done"){
+//                allModels.add(reportPos.get(idx).getName());
+//                System.out.println(reportPos.get(idx));
+//            }
+
+        }
+        return allModels;
+    }
+
+    public ArrayList<String> getAllModelNames_exist() {
+        ArrayList<ReportPo> reportPos = trainModelDao.getAllModels_exist();
+        ArrayList<String> allModels=new ArrayList<String>();
+        for (int idx = 0; idx < reportPos.size(); idx++) {
+            allModels.add(reportPos.get(idx).getName());
+//            System.out.println(reportPos.get(idx).getName());
+
         }
         return allModels;
     }
@@ -59,8 +80,8 @@ public class TrainModelService {
      * @date ：Created in
      * @description：Update one report (get bleu
      */
-    public ReportPo updateReportBleuByName(String name, Float bleu) {
-        ReportPo reportPo = trainModelDao.updateReportBleuByName(name, bleu);
+    public ReportPo updateReportBleuByName(String name, Float bleu,String savepath) {
+        ReportPo reportPo = trainModelDao.updateReportBleuByName(name, bleu, savepath);
         return reportPo;
     }
 
@@ -80,10 +101,11 @@ public class TrainModelService {
      * @description：insert a new report when train a new model
      */
     public ReportPo insertReport(String name, String data, String model, String epoch,
-                                 String batchsize, String rnn_cell, String embedding) throws ParseException {
+                                 String batchsize, String rnn_cell, String embedding,
+                                 String attention, String constructor) throws ParseException {
         Integer epoch_ = Integer.parseInt(epoch);
         Integer batchsize_ = Integer.parseInt(batchsize);
-        ReportPo reportPo = trainModelDao.insertReport(name, data, model, epoch_, batchsize_, rnn_cell, embedding);
+        ReportPo reportPo = trainModelDao.insertReport(name, data, model, epoch_, batchsize_, rnn_cell, embedding,attention,constructor);
         return reportPo;
     }
 
@@ -96,10 +118,15 @@ public class TrainModelService {
         trainModelDao.setTrainError(name);
     }
 
+    @Autowired
+    private CSVEntity csvEntity;
+
     public String createReports() throws IOException {
-        CSVEntity csvEntity=new CSVEntity(RandomStringUtils.randomAlphanumeric(10));
+
+//        CSVEntity csvEntity=new CSVEntity(RandomStringUtils.randomAlphanumeric(10));
         ArrayList<ReportPo> reportPos=trainModelDao.getAllModels();
         System.out.println(reportPos);
+        csvEntity.setDestpath();
         return csvEntity.write2csv(reportPos);
     }
 }

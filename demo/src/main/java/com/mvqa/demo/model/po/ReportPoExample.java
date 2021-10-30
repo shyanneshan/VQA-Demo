@@ -1202,53 +1202,203 @@ public class ReportPoExample {
             return (Criteria) this;
         }
 
-        public Criteria andDeletedEqualTo(Boolean value) {
+        public Criteria andDeletedEqualTo(String value) {
             addCriterion("deleted =", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedNotEqualTo(Boolean value) {
+        public Criteria andDeletedNotEqualTo(String value) {
             addCriterion("deleted <>", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedGreaterThan(Boolean value) {
+        public Criteria andDeletedGreaterThan(String value) {
             addCriterion("deleted >", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andDeletedGreaterThanOrEqualTo(String value) {
             addCriterion("deleted >=", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedLessThan(Boolean value) {
+        public Criteria andDeletedLessThan(String value) {
             addCriterion("deleted <", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedLessThanOrEqualTo(Boolean value) {
+        public Criteria andDeletedLessThanOrEqualTo(String value) {
             addCriterion("deleted <=", value, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedIn(List<Boolean> values) {
+        public Criteria andDeletedLike(String value) {
+            addCriterion("deleted like", value, "deleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeletedNotLike(String value) {
+            addCriterion("deleted not like", value, "deleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeletedIn(List<String> values) {
             addCriterion("deleted in", values, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedNotIn(List<Boolean> values) {
+        public Criteria andDeletedNotIn(List<String> values) {
             addCriterion("deleted not in", values, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedBetween(Boolean value1, Boolean value2) {
+        public Criteria andDeletedBetween(String value1, String value2) {
             addCriterion("deleted between", value1, value2, "deleted");
             return (Criteria) this;
         }
 
-        public Criteria andDeletedNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andDeletedNotBetween(String value1, String value2) {
             addCriterion("deleted not between", value1, value2, "deleted");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionIsNull() {
+            addCriterion("attention is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionIsNotNull() {
+            addCriterion("attention is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionEqualTo(String value) {
+            addCriterion("attention =", value, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionNotEqualTo(String value) {
+            addCriterion("attention <>", value, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionGreaterThan(String value) {
+            addCriterion("attention >", value, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionGreaterThanOrEqualTo(String value) {
+            addCriterion("attention >=", value, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionLessThan(String value) {
+            addCriterion("attention <", value, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionLessThanOrEqualTo(String value) {
+            addCriterion("attention <=", value, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionLike(String value) {
+            addCriterion("attention like", value, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionNotLike(String value) {
+            addCriterion("attention not like", value, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionIn(List<String> values) {
+            addCriterion("attention in", values, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionNotIn(List<String> values) {
+            addCriterion("attention not in", values, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionBetween(String value1, String value2) {
+            addCriterion("attention between", value1, value2, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttentionNotBetween(String value1, String value2) {
+            addCriterion("attention not between", value1, value2, "attention");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorIsNull() {
+            addCriterion("constructor is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorIsNotNull() {
+            addCriterion("constructor is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorEqualTo(String value) {
+            addCriterion("constructor =", value, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorNotEqualTo(String value) {
+            addCriterion("constructor <>", value, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorGreaterThan(String value) {
+            addCriterion("constructor >", value, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorGreaterThanOrEqualTo(String value) {
+            addCriterion("constructor >=", value, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorLessThan(String value) {
+            addCriterion("constructor <", value, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorLessThanOrEqualTo(String value) {
+            addCriterion("constructor <=", value, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorLike(String value) {
+            addCriterion("constructor like", value, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorNotLike(String value) {
+            addCriterion("constructor not like", value, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorIn(List<String> values) {
+            addCriterion("constructor in", values, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorNotIn(List<String> values) {
+            addCriterion("constructor not in", values, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorBetween(String value1, String value2) {
+            addCriterion("constructor between", value1, value2, "constructor");
+            return (Criteria) this;
+        }
+
+        public Criteria andConstructorNotBetween(String value1, String value2) {
+            addCriterion("constructor not between", value1, value2, "constructor");
             return (Criteria) this;
         }
     }

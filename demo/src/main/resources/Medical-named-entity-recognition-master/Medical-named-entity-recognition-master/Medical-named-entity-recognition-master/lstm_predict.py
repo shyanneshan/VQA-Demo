@@ -68,7 +68,8 @@ class LSTMNER:
         tags = [self.label_dict[i] for i in result][len(result)-len(text):]
         res = list(zip(chars, tags))
         # print(res)
-        return res
+        exp2(res)
+        return exp2(res)
 
     '''加载预训练词向量'''
     def load_pretrained_embedding(self):
@@ -121,24 +122,29 @@ class LSTMNER:
 
 
 def concatRes(testdata):
-    beginList = ['TREATMENT-B', 'BODY-B', 'SIGNS-B', 'CHECK-B', 'DISEASE-B']
-
+    beginList = ['B-TREATMENT', 'B-BODY', 'B-SIGNS', 'B-CHECK', 'B-DISEASE']
+    testdata.strip("\n")
     new_list = []
-    for i in range(len(testdata)):
-        data = testdata[i]
-        entity_type = data[1][:-2]
-        if data[1] in beginList:
+    origincal_data=testdata.split("\n")
+    for i in range(len(origincal_data)):
+        if origincal_data[i] == '':
+            continue
+        data = origincal_data[i]
+        if data.split(' ')[1] in beginList:
+            entity_type = data.split(' ')[1].split("-")[1]
+
             left = i
             right = i
             currentRes = data[0]
-            for j in range(i + 1, len(testdata)):
-                currentType = testdata[j][1]
-                if currentType != entity_type + '-I':
-
+            for j in range(i + 1, len(origincal_data)):
+                if origincal_data[j]=='':
+                    break
+                currentType = origincal_data[j].split(' ')[1]
+                if currentType != 'I-' + entity_type:
                     right = j + 1
                     break
                 else:
-                    currentRes = currentRes + testdata[j][0]
+                    currentRes = currentRes + origincal_data[j][0]
             if left != right:
                 tmp = [currentRes, entity_type]
                 new_list.append(tmp)
@@ -150,17 +156,22 @@ def concatRes(testdata):
 def predict(string):
     ner = LSTMNER()
     s = string.strip()
-    ner.predict(s)
+
     return concatRes(ner.predict(s))
 
 
 def predictAll(dicname,destname):
-
         result=[]
         with open(dicname, 'r', encoding='utf-8') as f: # 要去掉隐私的文件
             for line in f.readlines():
-                res=predict(line)
-                result=result+(res)
+                if len(line)>20:
+                    line_split=line.split('，')
+                    for l in line_split:
+                        res = predict(l)
+                        result = result + (res)
+                else:
+                    res=predict(line)
+                    result=result+(res)
         dict={'CHECK':[],
               'SIGNS':[],
               'DISEASE':[],
@@ -174,13 +185,52 @@ def predictAll(dicname,destname):
         with open(destname, "w", encoding='utf-8') as f:
             # indent 超级好用，格式化保存字典，默认为None，小于0为零个空格
             f.write(json.dumps(dict, indent=4))
+        return dict['DISEASE']
 
 
-
-if __name__ == '__main__':
-    ner = LSTMNER()
-    while 1:
-
-        s = input('enter an sent:').strip()
-        ner.predict(s)
-        concatRes(ner.predict(s))
+def exp2(list):
+    res=''
+    for s in list:
+        type='O'
+        if s[1] == 'DISEASE-B':
+            type = 'B-DISEASE'
+        elif s[1] == 'BODY-B':
+            type = 'B-BODY'
+        elif s[1] == 'SIGNS-B':
+            type = 'B-SIGNS'
+        elif s[1] == 'CHECK-B':
+            type = 'B-CHECK'
+        elif s[1] == 'TREATMENT-B':
+            type = 'B-TREATMENT'
+        elif s[1] == 'DISEASE-I':
+            type= 'I-DISEASE'
+        elif s[1] == 'BODY-I':
+            type = 'I-BODY'
+        elif s[1] == 'SIGNS-I':
+            type = 'I-SIGNS'
+        elif s[1] == 'CHECK-I':
+            type = 'I-CHECK'
+        elif s[1] == 'TREATMENT-I':
+            type= 'I-TREATMENT'
+        res=res+s[0]+' '+type+"\n"
+    print(res)
+    return res
+#
+# if __name__ == '__main__':
+#     ner = LSTMNER()
+#     res=''
+#     with open('train.txt', 'r') as f2:
+#         lines=f2.readlines()
+#         for line in lines:
+#             res=res+ner.predict(line[:-1])
+#     print(res)
+#     res.strip()
+#     with open('test.char.bmes', 'w', encoding='utf-8') as fw1:
+#         fw1.write(res)
+        # fw1.write('\n')
+    # while 1:
+    #
+    #     s = input('enter an sent:').strip()
+    #
+    #     ner.predict(s)
+    #     concatRes(ner.predict(s))

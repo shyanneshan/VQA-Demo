@@ -35,6 +35,15 @@ public class TrainModelDao {
         return reportPos.get(0);
     }
 
+    public void deleteFailed(){
+        System.out.println("delete  Failed Models in DAO.");
+        ReportPoExample reportPoExample=new ReportPoExample();
+        ReportPoExample.Criteria criteria = reportPoExample.createCriteria();
+        criteria.andStateEqualTo("failed");
+//        ArrayList<ReportPo> reportPos = (ArrayList<ReportPo>) reportPoMapper.selectByExample(reportPoExample);
+        reportPoMapper.deleteByExample(reportPoExample);
+    }
+
     /**
      * @author     ：hybai
      * @date       ：Created in
@@ -44,6 +53,15 @@ public class TrainModelDao {
         ReportPoExample reportPoExample=new ReportPoExample();
         ReportPoExample.Criteria criteria = reportPoExample.createCriteria();
         criteria.andStateEqualTo("done");
+        ArrayList<String> allModels=new ArrayList<String>();
+        ArrayList<ReportPo> reportPos = (ArrayList<ReportPo>) reportPoMapper.selectByExample(reportPoExample);
+        return reportPos;
+    }
+
+    public ArrayList<ReportPo> getAllModels_exist(){
+        ReportPoExample reportPoExample=new ReportPoExample();
+        ReportPoExample.Criteria criteria = reportPoExample.createCriteria();
+//        criteria.andStateEqualTo("done");
         ArrayList<String> allModels=new ArrayList<String>();
         ArrayList<ReportPo> reportPos = (ArrayList<ReportPo>) reportPoMapper.selectByExample(reportPoExample);
         return reportPos;
@@ -80,7 +98,7 @@ public class TrainModelDao {
             reportFullVo.setRecall(reportPos.get(idx).getRecall());
             reportFullVo.setPrec(reportPos.get(idx).getPrec());
             reportFullVo.setF1(reportPos.get(idx).getF1());
-            reportFullVo.setBleu(reportPos.get(idx).getBleu());
+            reportFullVo.setBleu((reportPos.get(idx).getBleu()));
             reportFullVo.setSavepath(reportPos.get(idx).getSavepath());
             reportFullVo.setEpoch(reportPos.get(idx).getEpoch());
             reportFullVo.setBatch(reportPos.get(idx).getBatchsize());
@@ -116,13 +134,14 @@ public class TrainModelDao {
      * @date       ：Created in
      * @description：update bleu
      */
-    public ReportPo updateReportBleuByName(String name,Float bleu){
+    public ReportPo updateReportBleuByName(String name,Float bleu, String savepath){
         ReportPoExample example = new ReportPoExample();
         ReportPoExample.Criteria criteria = example.createCriteria();
         criteria.andNameEqualTo(name);
         ReportPo reportPo=new ReportPo();
         reportPo.setState("done");
         reportPo.setBleu(bleu);
+        reportPo.setSavepath(savepath);
         int ret=reportPoMapper.updateByExampleSelective(reportPo,example);
         if(ret==0){
             System.out.println("error! update report by name in Dao.");
@@ -163,7 +182,8 @@ public class TrainModelDao {
      * @description：insert to db
      */
     public ReportPo insertReport(String name,String data,String model,Integer epoch,
-                                 Integer batchsize,String rnn_cell,String embedding) throws ParseException {
+                                 Integer batchsize,String rnn_cell,String embedding,
+                                 String attention, String constructor) throws ParseException {
         //first select ,then build, finally update selectively
         ReportPo reportPo=new ReportPo();
         reportPo.setState("running");
@@ -171,6 +191,9 @@ public class TrainModelDao {
         reportPo.setEpoch(epoch);
         reportPo.setBatchsize(batchsize);
         reportPo.setRnnCell(rnn_cell);
+        reportPo.setEmbedding(embedding);
+        reportPo.setAttention(attention);
+        reportPo.setConstructor(constructor);
         reportPo.setEmbedding(embedding);
         reportPo.setData(data);
         ZoneId zoneId = ZoneId.systemDefault();

@@ -44,7 +44,7 @@
 
         <!--数据库链接URL，用户名、密码 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/vqademo?serverTimezone=GMT%2B8" userId="root" password="123456">
+                        connectionURL="jdbc:mysql://localhost:3306/vqademo?serverTimezone=GMT%2B8" userId="root" password="3822186">
         </jdbcConnection>
         <javaTypeResolver>
             <!--
@@ -129,7 +129,27 @@
 
         注意，table里面很多参数都是对javaModelGenerator，context等元素的默认属性的一个复写；
         -->
-<!--        <table tableName="report" domainObjectName="ReportPo"-->
+        <table tableName="report" domainObjectName="ReportPo"
+               enableCountByExample="false" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+            <!-- 如果设置为true，生成的model类会直接使用column本身的名字，而不会再使用驼峰命名方法，比如BORN_DATE，生成的属性名字就是BORN_DATE,而不会是bornDate -->
+            <property name="useActualColumnNames" value="false"/>
+            <!--mysql 配置-->
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+            <columnOverride column="name" jdbcType="VARCHAR"></columnOverride>
+<!--            <columnOverride column="date" jdbcType="VARCHAR"></columnOverride>-->
+            <columnOverride column="state" jdbcType="VARCHAR"></columnOverride>
+            <columnOverride column="data" jdbcType="VARCHAR"></columnOverride>
+            <columnOverride column="savepath" jdbcType="VARCHAR"></columnOverride>
+            <columnOverride column="classification" jdbcType="VARCHAR"></columnOverride>
+            <columnOverride column="rnn_cell" jdbcType="VARCHAR"></columnOverride>
+            <columnOverride column="embedding" jdbcType="VARCHAR"></columnOverride>
+            <columnOverride column="deleted" jdbcType="VARCHAR"></columnOverride>
+            <columnOverride column="attention" jdbcType="VARCHAR"></columnOverride>
+            <columnOverride column="constructor" jdbcType="VARCHAR"></columnOverride>
+        </table>
+<!--        <table tableName="dataset" domainObjectName="DatasetPo"-->
 <!--               enableCountByExample="false" enableUpdateByExample="true"-->
 <!--               enableDeleteByExample="false" enableSelectByExample="true"-->
 <!--               selectByExampleQueryId="false">-->
@@ -137,16 +157,11 @@
 <!--            <property name="useActualColumnNames" value="false"/>-->
 <!--            &lt;!&ndash;mysql 配置&ndash;&gt;-->
 <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
+<!--            <columnOverride column="name" jdbcType="VARCHAR"></columnOverride>-->
+<!--            <columnOverride column="description" jdbcType="VARCHAR"></columnOverride>-->
+<!--            <columnOverride column="link" jdbcType="VARCHAR"></columnOverride>-->
+
 <!--        </table>-->
-        <table tableName="dataset" domainObjectName="DatasetPo"
-               enableCountByExample="false" enableUpdateByExample="true"
-               enableDeleteByExample="false" enableSelectByExample="true"
-               selectByExampleQueryId="false">
-            <!-- 如果设置为true，生成的model类会直接使用column本身的名字，而不会再使用驼峰命名方法，比如BORN_DATE，生成的属性名字就是BORN_DATE,而不会是bornDate -->
-            <property name="useActualColumnNames" value="false"/>
-            <!--mysql 配置-->
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
-        </table>
 
 <!--        <table tableName="ct_information" domainObjectName="ctInfoPo"-->
 <!--               enableCountByExample="false" enableUpdateByExample="true"-->

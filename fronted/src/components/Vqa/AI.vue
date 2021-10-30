@@ -59,7 +59,8 @@
                         :auto-upload="false"
                     >
                       <el-button slot="trigger" type="primary"
-                      >BROWSE</el-button
+                      >BROWSE
+                      </el-button
                       >
                     </el-upload>
                   </el-form-item>
@@ -82,10 +83,12 @@
                           :disabled="true"
                       >
                         <el-button slot="prepend" @click="openUploadDialog"
-                        >UPDATE</el-button
+                        >UPDATE
+                        </el-button
                         >
                         <el-button slot="append" @click="send" style="float: left"
-                        >SEND</el-button
+                        >SEND
+                        </el-button
                         >
                       </el-input>
                     </template>
@@ -109,10 +112,11 @@ export default {
   //   },
   data() {
     return {
+      blue:true,
+      blue_color: 255,
       input: "",
-      characterList: [
-      ],
-      characterChosen:"",
+      characterList: [],
+      characterChosen: "",
       final_transcript: "",
       recognizing: false,
       ignore_onend: "",
@@ -131,7 +135,7 @@ export default {
       },
       rules: {
         uploadFile: [
-          { required: true, message: "Please select file", trigger: "change" },
+          {required: true, message: "Please select file", trigger: "change"},
         ],
         desc: [
           {
@@ -145,18 +149,19 @@ export default {
   },
 
   methods: {
-    getAllModels(){
+    getAllModels() {
       this.$axios({
         method: 'get',
         url: '/models',
       }).then(res => {
-        for(var i=0;i<res.data.length;i++){
+        for (var i = 0; i < res.data.length; i++) {
           console.log(res.data[i])
-          var temp={"value":i+1,"label":res.data[i]}
+          var temp = {"value": i + 1, "label": res.data[i]}
 
           // console.log(temp)
           this.characterList.push(temp)
         }
+        console.log(this.characterList)
         // this.characterChosen=this.characterList[0].label;
 
       }).catch(error => {
@@ -179,6 +184,7 @@ export default {
         let params = new FormData();
         params.append("msg", this.input);
         this.input = '';
+
         this.$axios({
           method: 'post',
           url: '/consult/online',
@@ -192,14 +198,14 @@ export default {
           div.style = 'border: 1px rgb(235, 237, 240) solid; border-radius: 5px; background-color: rgb(235, 237, 240); float: left; width: fit-content; padding: 6px 10px; margin: 5px; margin-right: 30px;';
           outer_div.append(div);
           document.getElementById("chat-history").append(outer_div);
-          setTimeout("testFunction(res)","2000");
+          setTimeout("testFunction(res)", "2000");
           document.getElementById("chat-history-box").scrollTop = document.getElementById("chat-history").scrollHeight;
         }).catch(error => {
           console.log(error);
         });
       }
     },
-    showInfo:function (s) {
+    showInfo: function (s) {
 
       if (s) {
         for (var child = document.getElementById("info").firstChild; child; child = child.nextSibling) {
@@ -207,12 +213,12 @@ export default {
             child.style.display = child.id == s ? 'inline' : 'none';
           }
         }
-        document.getElementById("info").setAttribute("style","visibility:'visible'");
+        document.getElementById("info").setAttribute("style", "visibility:'visible'");
       } else {
-        document.getElementById("info").setAttribute("style","visibility:'hidden'");
+        document.getElementById("info").setAttribute("style", "visibility:'hidden'");
       }
     },
-    startButton:function (event) {
+    startButton: function (event) {
       if (this.recognizing) {
         this.recognition.stop();
         return;
@@ -223,7 +229,7 @@ export default {
       this.ignore_onend = false;
       // document.getElementById("final_span").innerHTML = '';
       // document.getElementById("interim_span").innerHTML = '';
-      this.micImgPath='mic-slash.gif';
+      this.micImgPath = 'mic-slash.gif';
       // document.getElementById("start_img").setAttribute("src",'../image/mic-slash.gif')  ;
       this.showInfo('info_allow');
       // this.showButtons('none');
@@ -231,7 +237,37 @@ export default {
     },
     chooseCharacter(value) {
       console.log(value)
-      this.characterChosen=value;
+      this.characterChosen = value;
+      this.blue=!this.blue
+      if(this.blue){
+        this.blue_color=255;
+      }else {
+        this.blue_color=120;
+      }
+      // clear the AI dialog
+      // document.removeChild(document.getElementById(
+      //     "chat-history-box"
+      // ))
+      var chat_history_node=document.getElementById("app").firstChild.
+          firstChild.lastChild.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.lastChild.firstChild;
+      var chat_history_childs=chat_history_node.childNodes;
+      // console.log((document.getElementById("app").firstChild).
+      //     firstChild.lastChild.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.lastChild.firstChild);
+      console.log(chat_history_childs)
+      // // document.body.innerHTML = "";
+      for(var i=chat_history_childs.length;i>=0;i--){
+        if(chat_history_node.contains(chat_history_childs[i])){
+          console.log(chat_history_childs[i])
+          chat_history_node.removeChild(chat_history_childs[i])
+
+        }
+
+        // document.getElementById("app").firstChild.
+        //     firstChild.lastChild.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.lastChild.firstChild.removeChild(chat_history_childs[i])
+      }
+      // document.getElementById("app").firstChild.
+      //     firstChild.lastChild.lastChild.firstChild.lastChild.firstChild.firstChild.firstChild.firstChild.lastChild.firstChild.innerHtml="";
+      console.log(this.characterList[this.characterChosen-1].label)
     },
     linebreak: function (s) {
       return s.replace(this.two_line, "<p></p>").replace(this.one_line, "<br>");
@@ -255,6 +291,17 @@ export default {
     },
     uploadMedicalArchive(content) {
       // window.console.log(this.fileList.length);
+
+      // var div1 = document.createElement("div");
+      // div1.innerHTML = this.characterList[this.characterChosen-1].label;
+      // div1.style =
+      //     "border: 1px rgb(31, 142, 255) solid;  background-color: rgb(31, 142, 255); color: white;  width: fit-content; padding: 6px 10px; margin: 5px; margin-left: 30px;";
+      // outer_div0.append(div1);
+      // document.getElementById("chat-history").append(outer_div0);
+      // document.getElementById(
+      //     "chat-history-box"
+      // ).scrollTop = document.getElementById("chat-history").scrollHeight;
+
       var imgurl = URL.createObjectURL(content.file);
       window.console.log(imgurl);
       console.log(this.uploadForm.desc);
@@ -269,7 +316,7 @@ export default {
       var image = document.createElement("img");
       image.src = URL.createObjectURL(content.file);
       image.style =
-          "border: 1px rgb(31, 142, 255) solid; border-radius: 5px; background-color: rgb(31, 142, 255); color: white; float: right; width: 200px; padding: 6px 10px; margin: 5px; margin-left: 30px;"; // document.getElementById("images").appendChild(image);
+          "border: 1px rgb(31, 142, 255) solid; border-radius: 5px; background-color: rgb(31, 142, 255); color: white; float: right; width: 150px; padding: 6px 10px; margin: 5px; margin-left: 30px;"; // document.getElementById("images").appendChild(image);
       var outer_div = document.createElement("div");
       outer_div.style = "width: 100%; overflow: auto;";
       var div = document.createElement("div");
@@ -280,6 +327,9 @@ export default {
       var outer_div2 = document.createElement("div");
       outer_div.style = "width: 100%; overflow: auto;";
       outer_div2.append(image);
+      // document.createElement("chat-history")
+
+
       document.getElementById("chat-history").append(outer_div);
       document.getElementById(
           "chat-history-box"
@@ -290,10 +340,29 @@ export default {
           "chat-history-box"
       ).scrollTop = document.getElementById("chat-history").scrollHeight;
       // console.log(error);
-      console.log("modelname:"+this.characterChosen)
+      console.log("modelname:" + this.characterList[this.characterChosen])
+
+
+      //
+      // setTimeout(()=>{
+      //   outer_div = document.createElement("div");
+      //   outer_div.style = "width: 100%; overflow: auto;";
+      //   div = document.createElement("div");
+      //   div.innerHTML = "4 Metacarpal fracture.";
+      //   div.style =
+      //       "border: 1px rgb(235, 237, 240) solid; border-radius: 5px; background-color: rgb(235, 237, 240); float: left; width: fit-content; padding: 6px 10px; margin: 5px; margin-right: 30px;";
+      //   outer_div.append(div);
+      //   document.getElementById("chat-history").append(outer_div);
+      //   // setTimeout("testFunction(res)", "2000");
+      //   document.getElementById(
+      //       "chat-history-box"
+      //   ).scrollTop = document.getElementById("chat-history").scrollHeight;
+      // },6000);
+
+
       this.$axios({
         method: "post",
-        url: "/archive/user/"+this.characterChosen,
+        url: "/archive/user/"+this.characterList[this.characterChosen-1].label,//this.characterChosen,
         data: params,
       }).then((res) => {
         window.console.log(res);
@@ -309,12 +378,12 @@ export default {
         div = document.createElement("div");
         div.innerHTML = res.data;
         div.style =
-            "border: 1px rgb(235, 237, 240) solid; border-radius: 5px; background-color: rgb(235, 237, 240); float: left; width: fit-content; padding: 6px 10px; margin: 5px; margin-right: 30px;";
+          "border: 1px rgb(235, 237, 240) solid; border-radius: 5px; background-color: rgb(235, 237, 240); float: left; width: fit-content; padding: 6px 10px; margin: 5px; margin-right: 30px;";
         outer_div.append(div);
         document.getElementById("chat-history").append(outer_div);
         setTimeout("testFunction(res)", "2000");
         document.getElementById(
-            "chat-history-box"
+          "chat-history-box"
         ).scrollTop = document.getElementById("chat-history").scrollHeight;
       });
     },
@@ -455,6 +524,7 @@ export default {
 #name-box {
   margin-top: 20px;
 }
+
 #name-box1 {
   margin-top: 10px;
   text-align: left;
@@ -464,6 +534,7 @@ export default {
 .intro {
   padding-top: 50px;
 }
+
 .option-block {
   display: inline-block;
   position: fixed;
@@ -474,6 +545,7 @@ export default {
 .option-block .el-select {
   width: 400px;
 }
+
 #start_button {
   border: 0;
   background-color: transparent;

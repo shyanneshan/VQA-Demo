@@ -12,7 +12,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 class LSTMNER:
     def __init__(self):
         cur = '/'.join(os.path.abspath(__file__).split('/')[:-1])
-        self.train_path = os.path.join(cur, 'data/train.txt')
+        self.train_path = os.path.join(cur, '1719train.txt')
         self.vocab_path = os.path.join(cur, 'model/vocab.txt')
         self.embedding_file = os.path.join(cur, 'model/token_vec_300.bin')
         self.model_path = os.path.join(cur, 'model/tokenvec_bilstm2_crf_model_20.h5')
@@ -31,7 +31,7 @@ class LSTMNER:
                          'DISEASE-B': 10
                         }
         self.EMBEDDING_DIM = 300
-        self.EPOCHS = 5
+        self.EPOCHS = 6
         self.BATCH_SIZE = 128
         self.NUM_CLASSES = len(self.class_dict)
         self.VOCAB_SIZE = len(self.word_dict)

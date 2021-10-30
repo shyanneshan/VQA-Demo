@@ -54,6 +54,7 @@ def removePrivacy(src , dest):
             seg_result=doNotHave(seg_list)
 
             file2.write(''.join(seg_result))
+        return seg_result
 
 
     finally:

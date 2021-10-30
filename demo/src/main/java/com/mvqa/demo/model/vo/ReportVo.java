@@ -20,4 +20,8 @@ public class ReportVo {
     private String rnn_cell;
 
     private String embedding;
+
+    private String attention;
+
+    private String constructor;
 }

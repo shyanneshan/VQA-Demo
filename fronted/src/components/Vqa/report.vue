@@ -8,9 +8,10 @@
             <span>Evaluation Report</span>
             <el-row type="flex" justify="end">
                 <el-button-group>
-<!--                  <el-button type="primary" size="mini" icon="el-icon-edit">Edit</el-button>-->
+                  <el-button type="danger" size="mini" @click="deleteFailed()">Quickly Remove<i class="el-icon-delete el-icon--left"></i></el-button>
                   <el-button type="primary" size="mini" @click="downloadReports()">Download<i class="el-icon-download el-icon--right"></i></el-button>
                 </el-button-group>
+
             </el-row>
 
           </div>
@@ -53,14 +54,14 @@
                   prop="name"
                   label="Report"
                   width="180"
-
+                  sortable
               ></el-table-column>
 
               <el-table-column
                   prop="classification"
                   label="Model"
                   width="180"
-
+                  sortable
               ></el-table-column>
 
               <el-table-column
@@ -70,12 +71,13 @@
                   sortable
               >
               </el-table-column>
-              <el-table-column prop="state" label="Status" width="180">
+              <el-table-column prop="state" label="Status" width="180" sortable>
               </el-table-column>
               <el-table-column
                   prop="data"
                   label="DataSet"
                   width="180"
+                  sortable
               >
               </el-table-column>
 
@@ -154,12 +156,52 @@ export default {
         alert("ERROR! Load Reports Failed! ");
       });
     },
+    deleteFailed(){
+
+      // this.stepsActive = 0;
+      // this.downloadVisable = true;
+
+      this.$axios({
+        method: 'delete',
+        url: '/deleteFailed',
+      }).then(res => {
+        console.log(res.data);
+        alert("Delete failed models sucess! Please refresh manually.");
+        // const content=res.data;
+        // const blob=new Blob([content]);
+        // const fileName='report.csv';
+        // if('download' in document.createElement('a')){
+        //   const link=document.createElement('a')
+        //   link.download=fileName
+        //   link.style.display='none'
+        //   link.href=URL.createObjectURL(blob)
+        //   document.body.appendChild(link)
+        //   link.click()
+        //   URL.revokeObjectURL(link.href)
+        //   document.body.removeChild(link)
+        // }else{
+        //   navigator.msSaveBlob(blob,fileName)
+        // }
+      }).catch(error => {
+        console.log(error);
+        alert("ERROR! Delete Reports Failed! ");
+      });
+    },
     tableRowClassName({row, rowIndex}) {
-      if (rowIndex === 1) {
-        return "warning-row";
-      } else if (rowIndex === 3) {
+      if (row.state=="done"){
         return "success-row";
       }
+      else if (row.state=="running"){
+        return "warning-row";
+      }
+      else {
+        return 'failed-row';
+      }
+      // if (rowIndex === 1) {
+      //   return "warning-row";
+      // } else if (rowIndex === 3) {
+      //   return "success-row";
+      // }
       return "";
     },
     getAllReports(){
@@ -251,6 +293,10 @@ export default {
   background: #f0f9eb;
 }
 
+.el-table .failed-row{
+  background: rgba(255, 101, 0, 0.38);
+}
+
 .header-bar span {
   font-size: 20px;
   font-weight: bold;
@@ -277,5 +323,7 @@ export default {
   margin-bottom: 0;
   width: 20%;
 }
+
+
 </style>
 

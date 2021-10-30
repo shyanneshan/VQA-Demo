@@ -14,6 +14,7 @@ import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 Vue.prototype.$axios = axios;
 axios.defaults.baseURL = '/api';
+axios.defaults.timeout=360000
 // axios.defaults.baseURL = '/';
 axios.interceptors.request.use(
   config => {

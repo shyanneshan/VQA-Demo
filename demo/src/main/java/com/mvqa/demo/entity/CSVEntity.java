@@ -1,20 +1,30 @@
 package com.mvqa.demo.entity;
 
 import com.mvqa.demo.model.po.ReportPo;
+import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
 
+@Component
 public class CSVEntity {
 
     private String filename;
 
-    private String destpath="/home/wxl/Documents/VQADEMO/download/reports/";
+    @Value("${report.download}")
+    private String destpath;//="/home/wxl/Documents/VQADEMO/download/reports/";
 
     private final String[] titles={"name","classification","data","epoch","batchsize","prec","recall","f1","bleu"};
 
-    public CSVEntity(String filename){
-        this.filename=filename;
+//    public CSVEntity(){
+//        this.filename= RandomStringUtils.randomAlphanumeric(10);
+//        this.destpath+=filename+".csv";
+//    }
+
+    public void setDestpath(){
+        this.filename= RandomStringUtils.randomAlphanumeric(10);
         this.destpath+=filename+".csv";
     }
 

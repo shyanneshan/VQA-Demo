@@ -33,41 +33,43 @@
     </template>
   <div>
     <el-table :data="patientIds.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%">
-      <el-table-column prop="name" label="病人编码">
+      <el-table-column prop="name" label="Document ID">
         <template slot-scope="scope">
           <span>{{scope.row.patientId}}</span>
 
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="图片编号">
+      <el-table-column prop="name" label="Picture ID">
         <template slot-scope="scope">
           <span>{{scope.row.photoId}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作">
+      <el-table-column label="Operation">
         <template slot-scope="scope">
           <el-popover
               placement="bottom"
-              title="若检查图像与疾病相对应请勾选（否则勿勾选）"
+              title="Check if the image corresponds to the disease (do not check otherwise)."
               width="1000"
               trigger="click"
               content="">
+            <el-button slot="reference" @click="getPhoto(scope.$index)">Edit</el-button>
+
             <div>
               <el-scrollbar style="height:500px">
                 <!--                                <p style="font-size:20px">请勾选每种诊断疾病对应的检查图像(不相关的请勿勾选)：</p>-->
-                <p style="font-size:15px">症状：</p>
+                <p style="font-size:15px">Symptoms：</p>
                 <p style="font-size:15px">{{scope.row.sym}}</p>
-                <p style="font-size:15px">辅助检查：</p>
+                <p style="font-size:15px">Auxiliary examination：</p>
                 <p style="font-size:15px">{{scope.row.annotation}}</p>
                 <!--                                <p style="font-size:15px">疾病：</p>-->
                 <!--                                <p style="font-size:15px">{{scope.row.dia}}</p>-->
                 <!--                                <button @click="getPhoto(scope.$index)">加载图片</button>-->
-                <el-input placeholder="请输入对检查图像的说明文字（参考辅助检查）" v-model="description"  style="width:90%; float:left">
+                <el-input placeholder="Please enter the description of the inspection image (refer to the auxiliary inspection)." v-model="description"  style="width:90%; float:left">
                 </el-input>
                 <div></div>
                 <div class="option-block">
-                  <el-select v-model="boneChosen" multiple filterable allow-create default-first-option placeholder="请选择所属部位" >
+                  <el-select v-model="boneChosen" multiple filterable allow-create default-first-option placeholder="Please select the location" >
                     <el-option-group v-for="group in boneList" :key="group.label" :label="group.label">
                       <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                       </el-option>
@@ -75,7 +77,7 @@
                   </el-select>
                 </div>
                 <div class="option-block">
-                  <el-select v-model="typeChosen" multiple filterable allow-create default-first-option placeholder="请选择检查片的类型" >
+                  <el-select v-model="typeChosen" multiple filterable allow-create default-first-option placeholder="Please select the type of examination sheet" >
                     <el-option-group v-for="group in typeList" :key="group.label" :label="group.label">
                       <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                       </el-option>
@@ -83,7 +85,7 @@
                   </el-select>
                 </div>
                 <div class="option-block">
-                  <el-select v-model="xrayChosen" multiple filterable allow-create default-first-option placeholder="请选择位置标识" >
+                  <el-select v-model="xrayChosen" multiple filterable allow-create default-first-option placeholder="Please select location identification" >
                     <el-option-group v-for="group in xrayList" :key="group.label" :label="group.label">
                       <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                       </el-option>
@@ -91,33 +93,33 @@
                   </el-select>
                 </div>
                 <div class="option-block">
-                  <el-select v-model="DirectionChosen" multiple filterable allow-create default-first-option placeholder="请下拉选择" >
+                  <el-select v-model="DirectionChosen" multiple filterable allow-create default-first-option placeholder="Please scroll down to select" >
                     <el-option-group v-for="group in characterList" :key="group.label" :label="group.label">
                       <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                       </el-option>
                     </el-option-group>
                   </el-select>
                 </div>
+                <label>
+                  <img :src="imgPath" width="500px" height="400px"/>
+                </label>
                 <div class="checkbox" v-for="(k,n) in dias">
                   <label >
                     <!--                                        <label class="checkbox-inline col-md-4" style="margin-left:0">-->
                     <input type="checkbox" :value="k" name="ct"  style="width:20px;height:20px;">
                     <p>{{k}}</p>
                   </label>
-                  <label>
-                    <img v-bind:src="require('./../../assets/' +photoFile+'.png')" width="500px" height="400px"/>
-                  </label>
                 </div>
 
 
                 <p style="text-align:center;">
-                  <button  @click="getId(scope.row.patientId,scope.row.photoId,description,boneChosen,DirectionChosen,typeChosen,xrayChosen)">提交</button>
+                  <button  @click="getId(scope.row.patientId,scope.row.photoId,description,boneChosen,DirectionChosen,typeChosen,xrayChosen)">Submit</button>
 
                 </p>
               </el-scrollbar>
             </div>
-            <el-button slot="reference" @click="getPhoto(scope.$index)">编辑</el-button>
           </el-popover>
+
         </template>
       </el-table-column>
     </el-table>
@@ -146,6 +148,7 @@ export default {
   data() {
     return {
       characterList_dataset: [],
+      imgPath:'',
       characterChosen:"",
       upList:[],
       description:'',
@@ -157,58 +160,58 @@ export default {
       currentPage: 1, // 当前页码
       total: 20, // 总条数
       pageSize: 100 ,// 每页的数据条数
-      DirectionChosen:'请选择拍摄面',
+      DirectionChosen:'Please select the shooting surface',
       characterList: [{
         options: [
-          {value:1, label: "横断面"},
-          {value:2, label: "冠状面"},
-          {value:3, label: "矢状面"}
+          {value:1, label: "Transverse"},//横断面
+          {value:2, label: "Coronal"},//冠状面
+          {value:3, label: "Sagittal"}//矢状面
         ]
       }],
-      typeChosen:'请选择检查图像所属类型',
+      typeChosen:'Please select the type of image to check',
       typeList: [{
         options: [
           {value:1, label: "ct"},
           {value:2, label: "x-ray"}
         ]
       }],
-      boneChosen:'请选择骨骼对应的器官',
+      boneChosen:'Please select the organ corresponding to the bone',
       boneList: [{
         options: [
-          {value:1, label: "头部"},
-          {value:2, label: "胸部"},
-          {value:3, label: "手"},
-          {value:4, label: "腿部"},
+          {value:1, label: "Head"},
+          {value:2, label: "Chest"},
+          {value:3, label: "Hand"},
+          {value:4, label: "Leg"},
         ]
       }],
-      xrayChosen:'请选择拍摄方向',
+      xrayChosen:'Please choose the direction of shooting',
       xrayList: [{
         options: [
-          {value:1, label: "A-P（前后位）"},
-          {value:2, label: "Lateral（侧位）"},
-          {value:3, label: "Lordotic（斜位）"},
-          {value:4, label: "A-p supine（前后位 仰卧）"},
-          {value:5, label: "P-A （后前位）"},
+          {value:1, label: "A-P"},//（前后位）
+          {value:2, label: "Lateral"},//（侧位）
+          {value:3, label: "Lordotic"},//（斜位）
+          {value:4, label: "A-p supine"},//（前后位 仰卧）
+          {value:5, label: "P-A "},//（后前位）
         ]
       }]
     }
   },
   methods: {
     opens() {
-      this.$alert('Labling is done, Now it\'s generation VQA pairs, pleases wait for a moment', 'Information', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'info',
-            message: `action: ${ action }`
-          });
-        }
+      this.$alert('Labeling is done, Now it\'s generation VQA pairs, pleases wait for a moment.', 'Information', {
+        confirmButtonText: 'Confirm',
+        // callback: action => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: `action: ${ action }`
+        //   });
+        // }
       });
     },
     generate(){
       this.$axios({
         method: 'get',
-        url: '/doneLableing',
+        url: '/doneLableing/'+this.characterList_dataset[this.characterChosen-1].label,
 
       }).then(res => {
         this.opens()
@@ -300,7 +303,7 @@ export default {
         data: params
       }).then(res => {
         this.$message({
-          message: '提交成功!',
+          message: 'Successfully!',
           type: 'success',
           offset:60,
           showClose: true
@@ -317,8 +320,10 @@ export default {
     },
     getPhoto(id){
       console.log("id",id);
-      this.photoFile=this.patientIds[id].photoId;
-      console.log("photoId",this.photoFile);
+      this.photoFile=this.patientIds[id].photoId + '.jpg';
+      this.imgPath = './../../../static/'+this.characterList_dataset[this.characterChosen-1].label+ '/' + this.photoFile ;
+
+      console.log("imgpath",this.imgPath);
 
       this.dias=this.patientIds[id].dias[0].split(",");
       console.log("dias",this.dias);

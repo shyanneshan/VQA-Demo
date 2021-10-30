@@ -23,6 +23,9 @@ public class DatasetDao {
         DatasetPoExample datasetPoExample=new DatasetPoExample();
         DatasetPoExample.Criteria criteria = datasetPoExample.createCriteria();
         ArrayList<DatasetPo> datasetPos = (ArrayList<DatasetPo>) datasetPoMapper.selectByExample(datasetPoExample);
+        for(int i=0;i<datasetPos.size();i++){
+            System.out.println(datasetPos.get(i).getName());
+        }
         return datasetPos;
     }
 

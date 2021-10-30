@@ -1,13 +1,38 @@
+import argparse
 import json
 import os
 import zipfile
+import csv
+import shutil
 
 from PreProcess import removePrivacy
 from lstm_predict import predictAll
 
-src='/home/wxl/Documents/VQADEMO/demo/src/main/resources/datasetOriginalData/7.9.zip'
-dest='/home/wxl/Documents/VQADEMO/demo/src/main/resources/datasetOriginalData/res'
-zipDest='/home/wxl/Documents/VQADEMO/demo/src/main/resources/datasetOriginalData/'
+def organizeOriginalData(src_path):
+    with open(src_path + '/relationship.csv', 'r') as f:
+        reader = csv.reader(f)
+        print(type(reader))
+        img_txt_dic = {}
+        for row in reader:
+            print(row)
+            if row[0] == 'txtid':
+                continue
+            img_txt_dic[row[1]] = row[0]
+
+        print(img_txt_dic)
+        if not os.path.exists(src_path + '/organizedData'):
+            os.mkdir(src_path + '/organizedData')
+
+        for key, value in img_txt_dic.items():
+            source_img_path = src_path + '/img/' + key + '.png'
+            source_txt_path = src_path + '/txt/' + value + '.txt'
+            new_dir_path = src_path + '/organizedData/' + key
+            os.mkdir(new_dir_path)
+            target_img_path = new_dir_path + '/' + key + '.png'
+            target_txt_path = new_dir_path + '/' + value + '.txt'
+
+            shutil.copy(source_img_path, target_img_path)
+            shutil.copy(source_txt_path, target_txt_path)
 
 def unzip_file(zip_src, dst_dir):
     r = zipfile.is_zipfile(zip_src)
@@ -18,38 +43,34 @@ def unzip_file(zip_src, dst_dir):
     else:
         print('This is not zip')
 
+def generateQuestions(dicname):
+    for i in os.listdir(dicname):
+        # os.path.splitext():分离文件名与扩展名
+        if os.path.splitext(i)[1] == '.png':
+            imgname = dicname +'/'+ i
+        elif os.path.splitext(i)[1] == '.txt':
+            textname = dicname +'/'+ i
 
-def generateQuestions(dicname,destname):
-    imgname = dicname + '/img'
-    textname = dicname + '/text.txt'
-    othername = dicname + '/other.txt'
-    textPreProcessedName = destname + '/preprocessed.txt'
-    removePrivacy(textname, textPreProcessedName)
+    textPreProcessedName = dicname + '/preprocessed.txt'
 
     NERinputName = textPreProcessedName
-    NERoutputName = destname + '/entity.json'
-    predictAll(NERinputName, NERoutputName)
-    resultEntity = destname + '/ResultEntity.json'
-    QA = destname + '/QA.txt'
-    # 将类文件对象中的JSON字符串直接转换成 Python 字典
-    with open(NERoutputName, 'r', encoding='utf-8') as f:
-        ret_dic = json.load(f)
-        with open(othername, 'r', encoding='utf-8') as f2:
-            data = f2.readlines()
-            for d in data:
-                da = d.split("|")
-                if da[1] == "药疗":
-                    ret_dic['TREATMENT'].append(da[2])
-                elif da[1] == "检查" or da[1] == "检验":
-                    ret_dic['CHECK'].append(da[2])
+    NERoutputName = dicname + '/entity.json'
 
-            with open(resultEntity, "w", encoding='utf-8') as f:
-                # indent 超级好用，格式化保存字典，默认为None，小于0为零个空格
-                f.write(json.dumps(ret_dic, indent=4))
-    os.remove(NERoutputName)
+    from mysqlconnect import insert_ct_info
+    dialist=predictAll(NERinputName,  NERoutputName)
+    text = removePrivacy(textname, textPreProcessedName)
+    # need fix
+    patient_id = textname.split('/')[-1]
+    photo_id = imgname.split('/')[-1]
+    annotation = ''
+    dataset = "xx"
+    insert_ct_info(patient_id,text,photo_id,dialist,annotation,dataset)
+
+    QApath = dicname + '/QA.txt'
+
     os.remove(textPreProcessedName)
 
-    with open(resultEntity, 'r', encoding='utf8')as fp:
+    with open(NERoutputName, 'r', encoding='utf8')as fp:
         json_data = json.load(fp)
         for data in json_data.values():
             print(data)
@@ -63,10 +84,10 @@ def generateQuestions(dicname,destname):
             print(data)
         QA = generateDISnCHECK(json_data["DISEASE"], json_data["CHECK"])
         print(QA)
-        with open(QA, 'w', encoding='utf8') as f:
+        with open(QApath, 'w', encoding='utf8') as f:
             for i in QA:
                 f.write(i + '\n')
-    os.remove(resultEntity)
+    # os.remove(resultEntity)
 
 
 # input : resultEntity
@@ -81,21 +102,25 @@ def generateDISnCHECK(dis,check):
 
 
 
-def main(src,dest):
+def main(src):
+
     zipDest=src[:-4]
-    print(zipDest)
     unzip_file(src, zipDest)
+    organizeOriginalData(zipDest)
+    for dic in os.listdir(zipDest+"/organizedData"):
+        dicname = zipDest+"/organizedData" + '/' + dic
 
-    for dic in os.listdir(zipDest):
-        dicname = zipDest + '/' + dic
-        destname=dest+'/'+dic
-        if not dic in os.listdir(dest):
-            os.makedirs(destname)
-        print(dicname)
-        print(destname)
-        generateQuestions(dicname,destname)
+        print (os.listdir(dicname))
+
+        generateQuestions(dicname)
 
 
-main(src,dest)
-
+# main(src)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--name', default='test')
+    args = parser.parse_args()
+    dataset = args.name
+    print(dataset)
+    main(dataset)
 

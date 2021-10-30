@@ -16,11 +16,13 @@ import java.util.*;
 @RequestMapping(value="", produces = "application/json;charset=UTF-8")
 public class ConsultController {
 
-    PythonCallEntity pythonCallEntity=new PythonCallEntity();
+    @Autowired
+    private PythonCallEntity pythonCallEntity;//=new PythonCallEntity();
 
     @Autowired
     TrainModelService trainModelService;
 
+    //the train done models [articleNet is excluded.]
     @GetMapping("/models")
     public ArrayList<String> getAllModels(){
 
@@ -52,6 +54,7 @@ public class ConsultController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        String ans="ans null";
         Runtime run = Runtime.getRuntime();
         String imgpath=uploadPath+'/'+ path.getName();
         String question=ques;
@@ -62,9 +65,9 @@ public class ConsultController {
                 System.out.println("will predict seq2seq.");
                 //call vgg seq2seq
                 try{
-                    String res=pythonCallEntity.VGG_Seq2Seq_predict("predict",reportPo.getData(),
-                            reportPo.getName(),  imgpath, question);
-                    System.out.println(res);
+                    ans=pythonCallEntity.VGG_Seq2Seq_predict(reportPo.getName(), reportPo.getData(),
+                            imgpath, question , reportPo.getSavepath());
+                    System.out.println(ans);
 //                    ReportPo reportPo1_vgg=trainModelService.updateReportBleuByName(reportPo.getName(),Float.parseFloat(res));
 
                 }catch (Exception e){
@@ -76,41 +79,55 @@ public class ConsultController {
                 System.out.println("will predict nlm.");
                 //call NLM
                 try{
-                    String res=pythonCallEntity.NLM_predict( reportPo.getName(), question, imgpath);
-                    ReportPo reportPo1_nlm=trainModelService.updateReportBleuByName(reportPo.getName(),Float.parseFloat(res));
+                    ans=pythonCallEntity.NLM_predict( reportPo.getName(), question, imgpath,reportPo.getData(),reportPo.getSavepath(),reportPo.getBatchsize());
+//                    ReportPo reportPo1_nlm=trainModelService.updateReportBleuByName(reportPo.getName(),Float.parseFloat(res));
                 }catch (Exception e){
                     e.printStackTrace();
                     trainModelService.setTrainError(reportPo.getName());
                 }
                 break;
-//            case "CR":
-//                System.out.println("will train cr.");
-//                //call CR
-//                break;
             case "ODL":
-                System.out.println("will train odl.");
-                //call ODL
+                System.out.println("will predict odl.");
+
+                try{
+                    String ae="";
+                    String maml="";
+                    if(reportPo.getConstructor().equals("both")){
+                        ae="True";
+                        maml="True";
+                    }else if(reportPo.getConstructor().equals("maml")){
+                        ae="False";
+                        maml="True";
+                    }else if(reportPo.getConstructor().equals("none")){
+                        ae="False";
+                        maml="False";
+                    }else {
+                        ae="True";
+                        maml="False";
+                    }
+
+                    ans=pythonCallEntity.ODL_predict(reportPo.getName(),question,imgpath,reportPo.getSavepath(),
+                            reportPo.getAttention(),reportPo.getRnnCell(),ae,maml,reportPo.getData());
+                }catch (Exception e){
+                    e.printStackTrace();
+                    trainModelService.setTrainError(reportPo.getName());
+                }
                 break;
             case "MMBERT":
-                System.out.println("will train mmbert.");
+                System.out.println("will predict mmbert.");
                 //call mmbert python
-                pythonCallEntity.MMBERT("predict",reportPo.getData(),reportPo.getName(),
-                        String.valueOf(reportPo.getEpoch()),String.valueOf(reportPo.getBatchsize()));
+                ans=pythonCallEntity.MMBERT_predict(reportPo.getName(),question,imgpath,reportPo.getSavepath(),reportPo.getData());
                 break;
-//            case "CGMVQA":
-//                System.out.println("will train cgm.");
-//                //call cgm python
-//
+//            case "ArticleNet":
+            // can't predict articleNet because of its character.
+//                System.out.println("will train ArticleNet.");
+//                //call knowledge embedding
 //                break;
-            case "Knowledge Embedded Metalearning":
-                System.out.println("will train knowledge.");
-                //call knowledge embedding
-                break;
             default:
                 System.out.println("this model unsupported.");
                 return "fail.";
         }
-        return "";
+        return ans;
 //        String model=String.valueOf(3);
 //        String cmdStr = "/home/lf/anaconda3/envs/tf/bin/python3.6 /home/lf/桌面/vqacode/NeuralNetwork-ImageQA-master/question_answer.py --image="+imgpath+" --question="+question+" --model=2";
 //        try {

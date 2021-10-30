@@ -534,62 +534,52 @@ public class DatasetPoExample {
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledEqualTo(String value) {
+        public Criteria andIslabeledEqualTo(Integer value) {
             addCriterion("islabeled =", value, "islabeled");
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledNotEqualTo(String value) {
+        public Criteria andIslabeledNotEqualTo(Integer value) {
             addCriterion("islabeled <>", value, "islabeled");
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledGreaterThan(String value) {
+        public Criteria andIslabeledGreaterThan(Integer value) {
             addCriterion("islabeled >", value, "islabeled");
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledGreaterThanOrEqualTo(String value) {
+        public Criteria andIslabeledGreaterThanOrEqualTo(Integer value) {
             addCriterion("islabeled >=", value, "islabeled");
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledLessThan(String value) {
+        public Criteria andIslabeledLessThan(Integer value) {
             addCriterion("islabeled <", value, "islabeled");
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledLessThanOrEqualTo(String value) {
+        public Criteria andIslabeledLessThanOrEqualTo(Integer value) {
             addCriterion("islabeled <=", value, "islabeled");
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledLike(String value) {
-            addCriterion("islabeled like", value, "islabeled");
-            return (Criteria) this;
-        }
-
-        public Criteria andIslabeledNotLike(String value) {
-            addCriterion("islabeled not like", value, "islabeled");
-            return (Criteria) this;
-        }
-
-        public Criteria andIslabeledIn(List<String> values) {
+        public Criteria andIslabeledIn(List<Integer> values) {
             addCriterion("islabeled in", values, "islabeled");
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledNotIn(List<String> values) {
+        public Criteria andIslabeledNotIn(List<Integer> values) {
             addCriterion("islabeled not in", values, "islabeled");
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledBetween(String value1, String value2) {
+        public Criteria andIslabeledBetween(Integer value1, Integer value2) {
             addCriterion("islabeled between", value1, value2, "islabeled");
             return (Criteria) this;
         }
 
-        public Criteria andIslabeledNotBetween(String value1, String value2) {
+        public Criteria andIslabeledNotBetween(Integer value1, Integer value2) {
             addCriterion("islabeled not between", value1, value2, "islabeled");
             return (Criteria) this;
         }

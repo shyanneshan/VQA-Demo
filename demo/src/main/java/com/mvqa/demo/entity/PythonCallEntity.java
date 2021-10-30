@@ -1,99 +1,43 @@
 package com.mvqa.demo.entity;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.io.*;
 
+@Component
 public class PythonCallEntity {
-    private final String torch_env = "python3.6";
-    private final String tf_env = "/home/wxl/anaconda3/envs/tf/bin/python";
-    private final String datasetdir = "/home/wxl/Documents/VQADEMO/dataset/";
-    private final String weightdir = "/home/wxl/Documents/VQADEMO/weights/";
-    //CGMVQA
+
+    @Value("${model.torch}")
+    private String torch_env;// = "/data2/entity/bhy/VQADEMO/model_code/MMBERT/venv/bin/python";//""python3.6";
+
+    @Value("${model.tf}")
+    private String tf_env;// = "/data2/entity/bhy/VQADEMO/model_code/vgg_seq2seq/venv/bin/python";//""/home/wxl/anaconda3/envs/tf/bin/python";
+
+    @Value("${model.dataset}")
+    private String datasetdir;// = "/data2/entity/bhy/VQADEMO/dataset/";//""/home/wxl/Documents/VQADEMO/dataset/";
+
+    @Value("${model.weight}")
+    private String weightdir;// = "/data2/entity/bhy/VQADEMO/weights/";
 
     //MMBERT
-    public String MMBERT(String mode, String data, String name, String epoch, String batch) throws IOException {
+    public String MMBERT_train(String data, String name, String epoch, String batch) throws IOException {
 
-        String dataset = " --train_text_file " + datasetdir + data + "/train/train.txt" +
-                " --valid_text_file " + datasetdir + data + "/valid/valid.txt" +
-                " --test_text_file " + datasetdir + data + "/test/test.txt" +
-                " --train_image_file " + datasetdir + data + "/train/train/" +
-                " --valid_image_file " + datasetdir + data + "/valid/valid/" +
-                " --test_image_file " + datasetdir + data + "/test/test/ ";
-
-        if (mode == "train") {
-            String model = " /home/wxl/Documents/VQADEMO/model_code/MMBERT/train.py";
+//        /data2/entity/bhy/VQADEMO/model_code/MMBERT/venv/bin/python \
+//        -u /data2/entity/bhy/VQADEMO/model_code/MMBERT/train.py \
+//        --run_name 'dataset' \
+//        --data_dir 'dataset' \
+//        --save_dir 'dataset' \
+//        --batch_size 16 \
+//        --epochs 10
+        String dataset = " --data_dir " + datasetdir + data ;
+        String model = " /data2/entity/bhy/VQADEMO/model_code/MMBERT/train.py ";
 //            String m=" --mode train";
-            String epoch_ = " --epochs " + epoch;
-            String batch_ = " --batch_size " + batch;
-            String n = " --run_name " + name;
-            String traincmd = torch_env + model + n + dataset + epoch_ + batch_;
-            System.out.println(traincmd);
-            Runtime run = Runtime.getRuntime();
-            try {
-                Process process = run.exec(traincmd);
-                InputStream in = process.getInputStream();
-                InputStreamReader reader = new InputStreamReader(in);
-                BufferedReader br = new BufferedReader(reader);
-                StringBuffer sb = new StringBuffer();
-                String message;
-                while ((message = br.readLine()) != null) {
-                    sb.append(message);
-                }
-                System.out.println(sb);
-//                return sb.toString();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return "";
-//            return false;
-        } else {//predict
-            String model = " /home/wxl/Documents/VQADEMO/model_code/MMBERT/eval.py";
-//            String m=" --mode predict";
-            String n = " --run_name " + name;
-            String question = " --question \"what modality is shown?\"";
-            String imag = " --imag ~/Documents/VQADEMO/dataset/VQA-Med-2019/ImageClef-2019-VQA-Med-Training/Train_images/synpic41148.jpg";
-            String predictcmd = torch_env + model + n + question + imag + dataset;
-            int rescode = 5;
-            Process proc = Runtime.getRuntime().exec(predictcmd);
-            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-            String line = null;
-            while (true) {
-                try {
-                    rescode = proc.exitValue();
-                    if (rescode != 5)
-                        break;
-                } catch (Exception e) {
-                    return "";
-                }
-            }
-            while ((line = in.readLine()) != null) {
-                System.out.println(line);
-            }
-            return "";
-        }
-
-    }
-
-    //ODL
-
-    //CR
-
-    //VGG-Seq2Seq
-    public String VGG_Seq2Seq_train(String mode, String data, String name, String epoch, String batch, String save_dir) throws IOException {
-        String dataset = " --train_text_file " + datasetdir + data + "/train/train.txt" +
-                " --valid_text_file " + datasetdir + data + "/valid/valid.txt" +
-                " --test_text_file " + datasetdir + data + "/test/test.txt" +
-                " --train_image_file " + datasetdir + data + "/train/train/" +
-                " --valid_image_file " + datasetdir + data + "/valid/valid/" +
-                " --test_image_file " + datasetdir + data + "/test/test/ ";
-        String savePath = " --save_dir " + save_dir;
-
-        String epoch_ = " --num_epochs " + epoch;
+        String epoch_ = " --epochs " + epoch;
         String batch_ = " --batch_size " + batch;
-        String model = " /home/wxl/Documents/VQADEMO/model_code/VQA-Med/seq2seq_image.py";
-        String m = " --mode train";
         String n = " --run_name " + name;
-        String traincmd = tf_env + model + m + n + dataset + epoch_ + batch_ + savePath;
+        String save_dir = " --save_dir " + weightdir+name;
+        String traincmd = torch_env + model + n + dataset + epoch_ + batch_+save_dir;
         System.out.println(traincmd);
         Runtime run = Runtime.getRuntime();
         try {
@@ -116,20 +60,209 @@ public class PythonCallEntity {
 
     }
 
-    public String VGG_Seq2Seq_predict(String mode, String data, String name, String imagPath, String ques) throws IOException {
-        String dataset = " --train_text_file " + datasetdir + data + "/train/train.txt" +
-                " --valid_text_file " + datasetdir + data + "/valid/valid.txt" +
-                " --test_text_file " + datasetdir + data + "/test/test.txt" +
-                " --train_image_file " + datasetdir + data + "/train/train/" +
-                " --valid_image_file " + datasetdir + data + "/valid/valid/" +
-                " --test_image_file " + datasetdir + data + "/test/test/ ";
+    //MMBERT predict
+    public String MMBERT_predict(String name,String ques,String imagPath,String savepath,String dataset) throws IOException {
+
+        String model = " /data2/entity/bhy/VQADEMO/model_code/MMBERT/eval.py";
+        String dataset_cmd = " --data_dir " + datasetdir+dataset;
+        String model_dir = " --model_dir " + savepath+'/'+name+".pt";
+
+        String[] s=ques.split("\\s+");
+        String ques2="";
+        for(int i=0;i<s.length;i++){
+            ques2+="_"+s[i];
+        }
+//        String question = " --question "+'\''+ques2+'\'';
+        String question = " --question "+'"'+ques2+'"';
+        String imag = " --imag "+imagPath;
+
+        String predictcmd = torch_env + model + dataset_cmd + question + imag + model_dir;
+
+        System.out.println(predictcmd);
+        Runtime run = Runtime.getRuntime();
+        try {
+            Process process = run.exec(predictcmd);
+            InputStream in = process.getInputStream();
+            InputStreamReader reader = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(reader);
+            StringBuffer sb = new StringBuffer();
+            String message;
+            while ((message = br.readLine()) != null) {
+                System.out.println(message);
+                sb.append(message);
+            }
+            System.out.println(sb);
+            return sb.toString();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+
+    //ODL
+    //ODL-VQA train
+    public String ODL_train(String data, String name, String epoch, String batch,
+                            String attention_model, String rnn, Boolean ae, Boolean maml) throws IOException {
+
+        String dataset = " --dataset " + datasetdir + data;
+        String output_cmd = " --output " + weightdir + name;
+        String name_cmd = " --name " + name;
+        String att_cmd = " --model " + attention_model;
+        String autoencoder="";
+        String maml_cmd="";
+        if (ae){
+            autoencoder= " --autoencoder True ";
+        }
+        if(maml){
+            maml_cmd= " --maml True ";
+        }
+
+        String rnn_cmd = " --rnn " + rnn;
+        String model = " /data2/entity/bhy/VQADEMO/model_code/ODL/main.py";
+        String epoch_ = " --epochs " + epoch;
+        String batch_ = " --batch_size " + batch;
+
+        String traincmd = torch_env + model + name_cmd + dataset + output_cmd + rnn_cmd + epoch_ + batch_ + maml_cmd+
+                autoencoder+att_cmd;
+        System.out.println(traincmd);
+        Runtime run = Runtime.getRuntime();
+        try {
+            Process process = run.exec(traincmd);
+            InputStream in = process.getInputStream();
+            InputStreamReader reader = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(reader);
+            StringBuffer sb = new StringBuffer();
+            String message;
+            while ((message = br.readLine()) != null) {
+                sb.append(message);
+            }
+            System.out.println(sb);
+            return sb.toString();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+
+
+    }
+
+    //ODL-VQA predict
+    public String ODL_predict(String name,String ques,String imagPath,String savepath,
+                              String attention,String rnn,String ae,String maml,String data_dir) throws IOException {
+        String[] s=ques.split("\\s+");
+        String ques2="";
+        for(int i=0;i<s.length;i++){
+            ques2+="_"+s[i];
+        }
+        String question = " --question "+'\''+ques2+'\'';
+        String imag = " --imag "+imagPath;
+        String model_path=" --input "+savepath+'/'+name+".pth";
+        String attention_cmd=" --model "+attention;
+        String rnn_cmd=" --rnn "+rnn;
+        String dataset=" --dataset "+datasetdir+data_dir;
+        String autoencoder=" --autoencoder "+ae;
+        String maml_cmd=" --maml "+maml;
+        String model = " /data2/entity/bhy/VQADEMO/model_code/ODL/predict.py";
+
+
+        String predictcmd = torch_env + model +question + imag+model_path+ attention_cmd+ rnn_cmd+ dataset+ autoencoder+ maml_cmd;
+        System.out.println(predictcmd);
+        Runtime run = Runtime.getRuntime();
+        try {
+            Process process = run.exec(predictcmd);
+//            Thread.sleep(25000);
+            process.waitFor();
+            InputStream in = process.getInputStream();
+            InputStreamReader reader = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(reader);
+            StringBuffer sb = new StringBuffer();
+            String message;
+            while ((message = br.readLine()) != null ) {
+                System.out.println(message);
+                System.out.println("message odl");
+                sb.append(message);
+            }
+            in.close();
+
+            System.out.println(sb);
+            return sb.toString();
+        } catch (IOException | InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    //AriticleNet
+
+    //VGG-Seq2Seq train
+    public String VGG_Seq2Seq_train(String name,String data, String epoch, String batch) throws IOException {
+        String dataset = " --traintxt " + datasetdir + data + "/train.txt " +
+                " --valtxt " + datasetdir + data + "/val.txt " +
+                " --testtxt " + datasetdir + data + "/test.txt " +
+                " --trainimg " + datasetdir + data + "/train " +
+                " --valimg " + datasetdir + data + "/val " +
+                " --testimg " + datasetdir + data + "/test ";
+//        String savePath = " --model_dir " + weightdir + name;
+        String data_dir = " --data_dir " + datasetdir+data;
+        File file = new File(weightdir+name);
+        if( !file.exists()){
+            file.mkdir();
+        }
+        String savePath = " --model_dir " + weightdir + name+'/'+name+".pt";
+        System.out.print(file.exists());
+        String epoch_ = " --epochs " + epoch;
+        String batch_ = " --batch-size " + batch;
+        String model = " /data2/entity/bhy/VQADEMO/model_code/vgg_seq2seq/train.py";
+        String traincmd = tf_env + model + data_dir+ dataset + epoch_ + batch_ + savePath;
+        System.out.println(traincmd);
+        Runtime run = Runtime.getRuntime();
+        try {
+            Process process = run.exec(traincmd);
+            InputStream in = process.getInputStream();
+            InputStreamReader reader = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(reader);
+            StringBuffer sb = new StringBuffer();
+            String message;
+            while ((message = br.readLine()) != null) {
+                sb.append(message);
+            }
+            System.out.println(sb);
+            return sb.toString();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+
+    }
+
+    //VGG-Seq2Seq predict
+    public String VGG_Seq2Seq_predict(String name, String data,  String imagPath, String ques,String savepath) throws IOException {
+
+        String dataset = " --traintxt " + datasetdir + data + "/train.txt " +
+                " --valtxt " + datasetdir + data + "/val.txt " +
+                " --testtxt " + datasetdir + data + "/test.txt " +
+                " --trainimg " + datasetdir + data + "/train " +
+                " --valimg " + datasetdir + data + "/val " +
+                " --testimg " + datasetdir + data + "/test ";
         //predict
-        String model = " /home/wxl/Documents/VQADEMO/model_code/VQA-Med/seq2seq_image.py";
-        String m = " --mode predict";
-        String n = " --run_name " + name;
-        String question = " --question \"" + ques + "\"";
+        String model = " /data2/entity/bhy/VQADEMO/model_code/vgg_seq2seq/predict.py";
+        String savePath = " --model_dir " + savepath + '/'+ name+".pt";
+        String data_dir = " --data_dir " + datasetdir+data;
+
+        String[] s=ques.split("\\s+");
+        String ques2="";
+        for(int i=0;i<s.length;i++){
+            ques2+="_"+s[i];
+        }
+//        String question = " --test-questions \""+ques2+"\"";
+        String question = " --question \"" + ques2 + "\"";
         String imag = " --imag " + imagPath;
-        String predictcmd = tf_env + model + dataset + m + n + question + imag;
+        String predictcmd = tf_env + model + dataset + savePath + data_dir + question + imag;
         System.out.println(predictcmd);
         Runtime run = Runtime.getRuntime();
         try {
@@ -153,36 +286,31 @@ public class PythonCallEntity {
 
 
     //NLM-VQA train
-    public String NLM_train(String mode, String data, String name, String epoch, String batch,
-                            String use_glove, String use_w2v, String rnn_cell, String save_dir) throws IOException {
-//        String env="python3.6";
-        String dataset = " --train_text_file " + datasetdir + data + "/train/train.txt" +
-                " --valid_text_file " + datasetdir + data + "/valid/valid.txt" +
-                " --test_text_file " + datasetdir + data + "/test/test.txt" +
-                " --train_image_file " + datasetdir + data + "/train/train/" +
-                " --valid_image_file " + datasetdir + data + "/valid/valid/" +
-                " --test_image_file " + datasetdir + data + "/test/test/ ";
+    public String NLM_train(String data, String name, String epoch, String batch,
+                            String use_glove, String use_w2v, String rnn_cell) throws IOException {
+
         String embedding = "";
         if (use_glove == "false" && use_w2v == "true") {
-            embedding += " --use_w2v True";
+            embedding += " --use-w2v -embedding-name \"PubMed-w2v.txt\"";
         } else if (use_glove == "true" && use_w2v == "false") {
-            embedding += " --use_glove True";
+            embedding += " --use-glove --embedding-name \"6B\"";
         } else {
             embedding = "";
         }
-        String rnn = " --rnn_cell " + rnn_cell;
-        String savePath = " --model_path " + save_dir;
-        String dataset_ = " --dataset " +weightdir+ name + "/vqa_dataset.hdf5" +
-                " --val_dataset " +weightdir+ name + "/vqa_dataset_val.hdf5" +
-                " --train_dataset_weights " +weightdir + name + "/vqa_train_dataset_weights.json" +
-                " --val_dataset_weights " +weightdir + name + "/vqa_train_dataset_weights.json" +
-                " --vocab_path "+weightdir+ name + "/vocab_vqa.json";
-        String model = " /home/wxl/Documents/VQADEMO/model_code/VQA/main.py";
-//            String m=" --mode train";
-        String epoch_ = " --num_epochs " + epoch;
-        String batch_ = " --batch_size " + batch;
-        String n = " --run_name " + name;
-        String traincmd = torch_env + model + n + dataset + dataset_ + embedding + rnn + epoch_ + batch_ + savePath;
+        String rnn = " --rnn-cell " + rnn_cell;
+        String savePath = " --model-path " + weightdir+name;
+
+        String dataset_ = " --data_dir "+ datasetdir+data+
+                " --dataset " +datasetdir+ data + "/train_vqa_dataset.hdf5" +
+                " --val-dataset " +datasetdir+ data + "/val_vqa_dataset.hdf5" +
+                " --test-dataset " +datasetdir+ data + "/test_vqa_dataset.hdf5" +
+                " --vocab-path "+datasetdir+ data + "/vocab_vqa.json";
+
+        String model = " /data2/entity/bhy/VQADEMO/model_code/nlm/train_vqa.py";
+        String epoch_ = " --num-epochs " + epoch;
+        String batch_ = " --batch-size " + batch;
+//        String n = " --run_name " + name;
+        String traincmd = torch_env + model + dataset_ + embedding + rnn + epoch_ + batch_ + savePath;
         System.out.println(traincmd);
         Runtime run = Runtime.getRuntime();
         try {
@@ -207,36 +335,85 @@ public class PythonCallEntity {
     }
 
     //NLM-VQA predict
-    public String NLM_predict(String name,String ques,String imagPath) throws IOException {
-//        String env="python3.6";
-        String weight_dir=(new File("")).getCanonicalPath()+"/weights/"+name;
-        String model_path=" --model-path "+weight_dir+"/vqa-1.pkl";
-        String vocab_path=" --vocab_path "+weight_dir+"/vocab_vqa.json";
-        String output_path=" --output "+weight_dir;
-        String model = " /home/wxl/Documents/VQADEMO/model_code/VQA/predict.py";
-//            String m=" --mode predict";
-        String n = " --run_name " + name;
-        String question = " --question \""+ques+"\"";
-        String imag = " --imagePath "+imagPath;
-        String predictcmd = torch_env + model + n + question + imag+output_path+model_path+vocab_path;
-        int rescode = 5;
-        Process proc = Runtime.getRuntime().exec(predictcmd);
-        BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        String line = null;
-        while (true) {
-            try {
-                rescode = proc.exitValue();
-                if (rescode != 5)
-                    break;
-            } catch (Exception e) {
-                return "false";
+    public String NLM_predict(String name,String ques,String imagPath,String dataset,String savepath,Integer batch) throws IOException {
+        String model = " /data2/entity/bhy/VQADEMO/model_code/nlm/evaluate_vqa.py";
+
+        String name_cmd = " --name " + name;
+        String model_path = " --model-path " + savepath;
+        String traindataset = " --dataset " + datasetdir+ dataset+"/train_vqa_dataset.hdf5";
+        String valdataset = " --val-dataset " + datasetdir+ dataset+"/val_vqa_dataset.hdf5";
+        String testdataset = " --test-dataset " + datasetdir+ dataset+"/test_vqa_dataset.hdf5";
+//        String batchsize = " --batch-size 2" ;
+        String vocab_cmd = " --vocab-path " +  datasetdir+ dataset+"/vocab_vqa.json";
+
+        String[] s=ques.split("\\s+");
+        String ques2="";
+        for(int i=0;i<s.length;i++){
+            ques2+="_"+s[i];
+        }
+        String question = " --test-questions \""+ques2+"\"";
+        String imag = " --test-image "+imagPath;
+        String predictcmd = torch_env + model + name_cmd + model_path + traindataset+valdataset+testdataset+
+                vocab_cmd+question+imag;
+        System.out.println(predictcmd);
+        Runtime run = Runtime.getRuntime();
+        try {
+            Process process = run.exec(predictcmd);
+            InputStream in = process.getInputStream();
+            InputStreamReader reader = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(reader);
+            StringBuffer sb = new StringBuffer();
+            String message;
+            while ((message = br.readLine()) != null) {
+                System.out.println(message);
+                sb.append(message);
             }
+            System.out.println(sb);
+            return sb.toString();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        while ((line = in.readLine()) != null) {
-            System.out.println(line);
-        }
-        return "true";
+        return "";
     }
 
+    //ArticleNet
+    public String AN_train(String name,String data,  String epoch, String batch) throws IOException {
+//        -u /data2/entity/bhy/VQADEMO/model_code/ArticleNet/train.py \
+//        --model_dir 'save/dataset.pt' \
+//        --dataset "/data2/entity/bhy/VQADEMO/dataset/VQA-Med-2019" \
+//        --batch-size 32 \
+//        --num-epoch 20
+        File file = new File(weightdir+name);
+        if( !file.exists()){
+            file.mkdir();
+        }
+        String model_dir = " --model_dir " + weightdir + name+"/"+name+".pt" ;
+        String model = " /data2/entity/bhy/VQADEMO/model_code/ArticleNet/train.py ";
+        String epoch_ = " --num-epoch " + epoch;
+        String batch_ = " --batch-size " + batch;
+        String data_dir = " --dataset " + datasetdir + data;
+        String traincmd = torch_env + model + model_dir + epoch_ + batch_+data_dir;
+        System.out.println(traincmd);
+        Runtime run = Runtime.getRuntime();
+        try {
+            Process process = run.exec(traincmd);
+            InputStream in = process.getInputStream();
+            InputStreamReader reader = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(reader);
+            StringBuffer sb = new StringBuffer();
+            String message;
+            while ((message = br.readLine()) != null) {
+                sb.append(message);
+            }
+            System.out.println(sb);
+            return sb.toString();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+
+    }
 
 }

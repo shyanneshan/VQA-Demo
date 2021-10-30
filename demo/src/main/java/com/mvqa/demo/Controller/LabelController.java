@@ -7,10 +7,14 @@ import com.mvqa.demo.entity.Photo;
 import com.mvqa.demo.model.po.ctInfoPo;
 import com.mvqa.demo.model.po.ctInfoPoExample;
 import com.mvqa.demo.model.po.ctValPo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +23,7 @@ import java.util.List;
 public class LabelController {
     @Autowired
     private ctInfoPoMapper ctInfoPoMapper;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatasetController.class);
 
     @Autowired
     private ctValPoMapper ctValPoMapper;
@@ -56,6 +61,22 @@ public class LabelController {
 //            response.setStatus(450);
 //        }
     }
+
+    @Value("${dataset.dest}")
+    private String dest;
+
+    @GetMapping("/doneLableing/{dataset}")
+    public void doneLableing (@PathVariable("dataset") String dataset,HttpServletResponse response) {
+        try {
+            python(dataset);
+            LOGGER.info(dataset);
+        } catch (IOException e) {
+            LOGGER.error(e.toString(), e);
+        }
+
+    }
+
+
     @GetMapping("/all/{dataset}")
     public ArrayList<Photo> getAllPatients(@PathVariable("dataset") String dataset,HttpServletResponse response){
         ArrayList<Photo> photos=new ArrayList<Photo>();
@@ -75,5 +96,39 @@ public class LabelController {
             response.setStatus(460);
         }
         return photos;
+    }
+
+    @Value("${dataset.pythonenv}")
+    private String pythonEnv;
+
+    @Value("${fronted.VQApythonscript}")
+    private String pythonScript;
+
+    public void python(String fileSrc) throws IOException {
+
+        String datasetDest=dest;
+
+        String env= pythonEnv;
+        File dic=new File(".");
+        System.out.println(dic.getCanonicalFile());
+        String model=pythonScript;
+        String cmd=env+" "+model+" --name "+fileSrc+" --dest "+datasetDest;
+        System.out.println(cmd);
+        Runtime run=Runtime.getRuntime();
+        try{
+            Process process=run.exec(cmd);
+            InputStream in=process.getInputStream();
+            InputStreamReader reader=new InputStreamReader(in);
+            BufferedReader br =new BufferedReader(reader);
+            StringBuffer sb=new StringBuffer();
+            String message;
+            while((message=br.readLine())!=null){
+                sb.append(message);
+            }
+            System.out.println(sb);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }
