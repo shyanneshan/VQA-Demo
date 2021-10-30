@@ -273,8 +273,12 @@ export default {
       trainSetFileList: [],
       testSetFileList: [],
       devSetFileList: [],
+<<<<<<< HEAD
       fileBook: null,
       ZipFormat: null
+=======
+      fileBook: null
+>>>>>>> 564dc6dfb293cd60d8251eb19e135a86ea0b7d6c
     };
   },
   methods: {
