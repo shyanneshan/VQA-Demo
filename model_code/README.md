@@ -1,75 +1,49 @@
 # models Code
 
-**This is the open source code of our paper.**
+**This is the code for five models.**
 
-#### Target
+#### Joint embedding model
 
-We build a VQA application platform from dataset generation to model application.
+##### ODL
 
-#### Video
+This model is open source [here]（https://github.com/aioz-ai/MICCAI19-MedVQA）.
 
-We upload the recorded video, and users can learn how to use the system according to the [**videos**](https://github.com/shyanneshan/VQA-Demo/tree/master/video).
+maml and autoEncoder weight are placed in /ODL/pretrained
 
-#### Module
+glove file is placed in /ODL/glove/glove.6B.300d.txt
 
-The demo has the following modules.
+#### Encoder-Decoder model
 
-##### Dataset generation
+##### NLM
 
-Upload the ZIP file of the medical record and build the dataset.
+This model is open source [here]（https://github.com/sarrouti/VQA）.
 
-![](pic/dataset1.png)
+word2vector embedding file is placed in /nlm/.vector_cache/PubMed-w2v.txt. Can be found online.
 
-![](pic/dataset2.png)
+if you want to use glove embedding, use **--embedding-name '6B'**
 
-##### Label
+##### Vgg-Seq2Seq
 
-Label by patient id and picture id.
+This model is open source [here]（https://github.com/bashartalafha/VQA-Med）.
 
-![](pic/label1.png)
+glove file is placed in /vgg-seq2seq/glove/glove.6B.300d.txt
 
-![](pic/label2.png)
+#### Attention-based model
 
-##### Model training
+##### MMBERT
 
-![](pic/practice.png)
+This model is open source [here]（https://github.com/VirajBagal/MMBERT）.
 
-Medical VQA model is provided, and users can select parameter annotation. (For the time being, there are only three models: NLM, VGG-Seq2Seq, MMbert, and models will be introduced in the future.)
+#### Knowledge embedding model
 
-##### Model application
+##### ArticleNet
 
-After the training, the model score report is provided and the model effect can be tested on the AI Robot interface.
+This model is open source [here]（https://github.com/Adam1679/mutan-article-net）
 
-![](pic/report.png)
+wiki knowledge base file is placed in /ArticleNet/wiki/wiki_order.json
 
-![](pic/ai.png)
+We download wiki knowledge xml file. Get the wiki_order.json file about its title and content， and sort. he processing file have been uploaded.
 
-#### The environment
+glove file is placed in /ArticleNet/glove/glove.6B.50d.txt
 
-> Ubuntu 20.04
->
-> mysql 8.0.25
->
-> jdk 1.8
->
-> Vue
-
-#### Build
-
-**How to run frontend?**
-
-The front files are in the [**fronted folder.**](https://github.com/shyanneshan/VQA-Demo/tree/master/fronted)
-
-```
-npm install
-npm run dev
-```
-
-**How to run backend?**
-The back-end code is in the [**demo folder.**](https://github.com/shyanneshan/VQA-Demo/tree/master/demo)
-
-**Configuration**
-
-The sql file is in the [resources](https://github.com/shyanneshan/VQA-Demo/tree/master/demo/src/main/resources). We only provide several pieces of records for illustration.
-We've created three new Python environments. Python environments are provided by [requirements](https://github.com/shyanneshan/VQA-Demo/tree/master/demo/src/main/resources/python).
 
